@@ -1,0 +1,23 @@
+.bento-section {
+  position: relative;
+  user-select: none;
+}
+
+.card {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-intensity: 0;
+  --glow-radius: 200px;
+}
+
+.global-spotlight {
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  z-index: 200 !important;
+  pointer-events: none;
+}
+
+.particle-container {
+  position: relative;
+  overflow: hidden;
+}

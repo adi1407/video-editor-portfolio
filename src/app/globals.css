@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+
+  --background: #05070c;
+  --foreground: #ffffff;
+  --surface: #0a0f18;
+  --surface-muted: #111827;
+  --border: #1c2a3f;
+  --muted: #b8c4d6;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-foreground: #ffffff;
+  --accent-soft: rgba(59, 130, 246, 0.16);
+  --glow: rgba(56, 189, 248, 0.28);
+  --danger: #f87171;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 220ms;
+  --duration-base: 520ms;
+  --duration-slow: 900ms;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-open-sans);
+  --font-display: var(--font-playfair);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+  font-family: var(--font-open-sans), "Open Sans", sans-serif;
+  letter-spacing: 0.01em;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-playfair), "Playfair Display", serif;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59, 130, 246, 0.18), transparent 55%),
+    radial-gradient(ellipse 40% 30% at 90% 20%, rgba(14, 165, 233, 0.1), transparent 50%),
+    var(--background);
+}
+
+/* Shared motion tokens — drop custom keyframes below when you share them */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--glow);
+  }
+  50% {
+    box-shadow: 0 0 32px 4px var(--glow);
+  }
+}
+
+@keyframes blue-shift {
+  0%,
+  100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(12deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--duration-base) var(--ease-out-expo) both;
+}
+
+.animate-fade-up {
+  animation: fade-up var(--duration-base) var(--ease-out-expo) both;
+}
+
+.animate-glow {
+  animation: glow-pulse 2.8s var(--ease-in-out-soft) infinite;
+}
+
+.animate-delay-1 {
+  animation-delay: 80ms;
+}
+
+.animate-delay-2 {
+  animation-delay: 160ms;
+}
+
+.animate-delay-3 {
+  animation-delay: 240ms;
+}
+
+/* Custom portfolio animations — paste shared clips / keyframes here later */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
