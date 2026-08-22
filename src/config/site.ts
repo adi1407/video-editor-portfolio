@@ -1,9 +1,23 @@
+function resolveSiteUrl() {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) {
+    return explicit.replace(/\/$/, "");
+  }
+
+  const vercel = process.env.VERCEL_URL?.trim();
+  if (vercel) {
+    return `https://${vercel.replace(/^https?:\/\//, "")}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 export const siteConfig = {
   name: "Raju Jha",
   shortName: "Rjha",
   description:
     "Video Editor and Visual Designer specializing in long-form videos, short-form content, motion graphics, posters, and brand visuals.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: resolveSiteUrl(),
   locale: "en_US",
   creator: "Raju Jha",
   keywords: [
