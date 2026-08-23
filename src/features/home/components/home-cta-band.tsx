@@ -3,9 +3,10 @@
 import Link from "next/link";
 import ShinyText from "@/components/ui/ShinyText";
 import { buttonClassName, Container } from "@/components/ui";
-import { profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 export function HomeCtaBand() {
+  const { profile } = usePortfolio();
   return (
     <section className="border-t border-border py-20">
       <Container className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">

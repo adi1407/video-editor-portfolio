@@ -3,15 +3,18 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import FoldText from "@/components/ui/FoldText";
 import PixelTransition from "@/components/ui/PixelTransition";
 import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { Container } from "@/components/ui";
-import { workCategories } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 import { useMediaQuery, useMounted } from "@/hooks";
 import { WorkCard } from "./work-card";
+import { WorkVideoModal } from "./work-video-modal";
 import type { MorphItem } from "@/components/ui/MorphSlider";
+import type { WorkCategoryView } from "@/types/portfolio";
 
 const DriftWall = dynamic(() => import("@/components/ui/DriftWall"), {
   ssr: false,
@@ -51,14 +54,6 @@ const ScrollExpand = dynamic(() => import("@/components/ui/ScrollExpand"), {
   ssr: false,
   loading: () => <div className="h-[50vh] w-full animate-pulse bg-surface" />,
 });
-
-const archiveItems = workCategories.flatMap((category) =>
-  category.items.map((item) => ({
-    image: item.image,
-    title: item.title,
-    href: `/work#${category.slug}`,
-  })),
-);
 
 function MobileImageStrip({
   items,
@@ -157,6 +152,18 @@ export function WorkHero() {
 export function WorkGallery() {
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { workCategories } = usePortfolio();
+  const archiveItems = useMemo(
+    () =>
+      workCategories.flatMap((category) =>
+        category.items.map((item) => ({
+          image: item.image,
+          title: item.title,
+          href: `/work#${category.slug}`,
+        })),
+      ),
+    [workCategories],
+  );
 
   return (
     <section
@@ -216,6 +223,7 @@ export function WorkGallery() {
 }
 
 export function WorkCategoryNav() {
+  const { workCategories } = usePortfolio();
   return (
     <nav
       aria-label="Work categories"
@@ -263,31 +271,48 @@ function CategoryHeader({
 
 function ProjectGrid({
   items,
+  onPlay,
 }: {
-  items: ReadonlyArray<{
-    title: string;
-    image: string;
-    tags: readonly string[];
-  }>;
+  items: WorkCategoryView["items"];
+  onPlay?: (payload: { title: string; videoUrl: string }) => void;
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
       {items.map((item) => (
         <WorkCard
-          key={item.title}
+          key={item.id}
           title={item.title}
           image={item.image}
           tags={[...item.tags]}
+          videoUrl={item.videoUrl}
+          onPlay={onPlay}
         />
       ))}
     </div>
   );
 }
 
-function LongFormSection() {
-  const category = workCategories[0];
+function LongFormSection({
+  category,
+  onPlay,
+}: {
+  category: WorkCategoryView;
+  onPlay: (payload: { title: string; videoUrl: string }) => void;
+}) {
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const lead = category.items[0];
+
+  if (!lead) {
+    return (
+      <section id={category.slug} className="scroll-mt-24 border-b border-border py-16">
+        <Container>
+          <CategoryHeader title={category.title} blurb={category.blurb} />
+          <p className="mt-6 text-sm text-muted">No projects yet.</p>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -297,8 +322,8 @@ function LongFormSection() {
       {mounted && isDesktop ? (
         <div className="bg-background">
           <ScrollExpand
-            src={category.items[0].image}
-            alt={category.items[0].title}
+            src={lead.image}
+            alt={lead.title}
             title={category.title}
             scrollHint="Scroll"
             useWindowScroll
@@ -315,12 +340,12 @@ function LongFormSection() {
       ) : (
         <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border sm:aspect-[21/9]">
           <Image
-            src={category.items[0].image}
-            alt={category.items[0].title}
+            src={lead.image}
+            alt={lead.title}
             fill
             className="object-cover"
             sizes="100vw"
-            priority={false}
+            unoptimized={lead.image.startsWith("http")}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8">
@@ -335,20 +360,27 @@ function LongFormSection() {
       )}
       <Container className="flex flex-col gap-8 py-12 sm:gap-10 sm:py-20">
         <CategoryHeader title="Selected long-format edits" blurb={category.blurb} />
-        <ProjectGrid items={category.items} />
+        <ProjectGrid items={category.items} onPlay={onPlay} />
       </Container>
     </section>
   );
 }
 
-function ShortFormSection() {
-  const category = workCategories[1];
+function ShortFormSection({
+  category,
+  onPlay,
+}: {
+  category: WorkCategoryView;
+  onPlay: (payload: { title: string; videoUrl: string }) => void;
+}) {
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const morphItems: MorphItem[] = category.items.map((item) => ({
     image: item.image,
     caption: item.title,
   }));
+  const first = category.items[0];
+  const second = category.items[1] ?? category.items[0];
 
   return (
     <section
@@ -357,7 +389,7 @@ function ShortFormSection() {
     >
       <Container className="flex flex-col gap-8 sm:gap-10">
         <CategoryHeader title={category.title} blurb={category.blurb} />
-        {mounted && isDesktop ? (
+        {mounted && isDesktop && morphItems.length ? (
           <div className="relative h-[420px] w-full overflow-hidden border border-border sm:h-[500px]">
             <MorphSlider
               items={morphItems}
@@ -372,47 +404,52 @@ function ShortFormSection() {
         ) : (
           <MobileImageStrip items={category.items} label="Short format stills" />
         )}
-        <div className="mx-auto w-full max-w-md">
-          <PixelTransition
-            gridSize={mounted && isDesktop ? 8 : 6}
-            pixelColor="#A78BFA"
-            animationStepDuration={0.3}
-            aspectRatio="125%"
-            className="!w-full max-w-full overflow-hidden rounded-none border border-border"
-            firstContent={
-              <Image
-                src={category.items[0].image}
-                alt={category.items[0].title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 420px"
-              />
-            }
-            secondContent={
-              <Image
-                src={category.items[1].image}
-                alt={category.items[1].title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 420px"
-              />
-            }
-          />
-          <p className="mt-2 text-center text-xs text-muted md:hidden">
-            Tap to swap frames
-          </p>
-        </div>
-        <ProjectGrid items={category.items} />
+        {first && second ? (
+          <div className="mx-auto w-full max-w-md">
+            <PixelTransition
+              gridSize={mounted && isDesktop ? 8 : 6}
+              pixelColor="#A78BFA"
+              animationStepDuration={0.3}
+              aspectRatio="125%"
+              className="!w-full max-w-full overflow-hidden rounded-none border border-border"
+              firstContent={
+                <Image
+                  src={first.image}
+                  alt={first.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 420px"
+                  unoptimized={first.image.startsWith("http")}
+                />
+              }
+              secondContent={
+                <Image
+                  src={second.image}
+                  alt={second.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 420px"
+                  unoptimized={second.image.startsWith("http")}
+                />
+              }
+            />
+            <p className="mt-2 text-center text-xs text-muted md:hidden">
+              Tap to swap frames
+            </p>
+          </div>
+        ) : null}
+        <ProjectGrid items={category.items} onPlay={onPlay} />
       </Container>
     </section>
   );
 }
 
-function PostersSection() {
-  const category = workCategories[2];
+function PostersSection({ category }: { category: WorkCategoryView }) {
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const posterImages = category.items.map((item) => item.image);
+  const first = category.items[0];
+  const second = category.items[1] ?? category.items[0];
 
   return (
     <section
@@ -421,44 +458,48 @@ function PostersSection() {
     >
       <Container className="flex flex-col gap-8 py-12 sm:gap-10 sm:pb-10 sm:pt-20">
         <CategoryHeader title={category.title} blurb={category.blurb} />
-        <div className="mx-auto w-full max-w-xl overflow-hidden border border-border">
-          <PixelSwap
-            firstContent={
-              <div className="relative h-full w-full">
-                <Image
-                  src={category.items[0].image}
-                  alt={category.items[0].title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 560px"
-                />
-              </div>
-            }
-            secondContent={
-              <div className="relative h-full w-full">
-                <Image
-                  src={category.items[1].image}
-                  alt={category.items[1].title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 560px"
-                />
-              </div>
-            }
-            pixelSize={mounted && isDesktop ? 48 : 40}
-            gap={0}
-            duration={1000}
-            pattern="diagonal"
-            trigger={mounted && isDesktop ? "hover" : "click"}
-            aspectRatio="75%"
-            className="w-full"
-          />
-          <p className="border-t border-border px-3 py-2 text-center text-xs text-muted md:hidden">
-            Tap to reveal the other poster
-          </p>
-        </div>
+        {first && second ? (
+          <div className="mx-auto w-full max-w-xl overflow-hidden border border-border">
+            <PixelSwap
+              firstContent={
+                <div className="relative h-full w-full">
+                  <Image
+                    src={first.image}
+                    alt={first.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 560px"
+                    unoptimized={first.image.startsWith("http")}
+                  />
+                </div>
+              }
+              secondContent={
+                <div className="relative h-full w-full">
+                  <Image
+                    src={second.image}
+                    alt={second.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 560px"
+                    unoptimized={second.image.startsWith("http")}
+                  />
+                </div>
+              }
+              pixelSize={mounted && isDesktop ? 48 : 40}
+              gap={0}
+              duration={1000}
+              pattern="diagonal"
+              trigger={mounted && isDesktop ? "hover" : "click"}
+              aspectRatio="75%"
+              className="w-full"
+            />
+            <p className="border-t border-border px-3 py-2 text-center text-xs text-muted md:hidden">
+              Tap to reveal the other poster
+            </p>
+          </div>
+        ) : null}
       </Container>
-      {mounted && isDesktop ? (
+      {mounted && isDesktop && posterImages.length ? (
         <div className="relative h-[520px] w-full overflow-hidden border-y border-border bg-background sm:h-[600px]">
           <FlyingPosters items={posterImages} />
         </div>
@@ -474,8 +515,7 @@ function PostersSection() {
   );
 }
 
-function LogosSection() {
-  const category = workCategories[3];
+function LogosSection({ category }: { category: WorkCategoryView }) {
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const menuItems = category.items.map((item) => ({
@@ -493,7 +533,7 @@ function LogosSection() {
       <Container className="flex flex-col gap-8 py-12 sm:gap-10 sm:pb-10 sm:pt-20">
         <CategoryHeader title={category.title} blurb={category.blurb} />
       </Container>
-      {mounted && isDesktop ? (
+      {mounted && isDesktop && menuItems.length ? (
         <div className="relative h-[520px] w-full overflow-hidden border-y border-border bg-background sm:h-[600px]">
           <InfiniteMenu items={menuItems} />
         </div>
@@ -510,12 +550,29 @@ function LogosSection() {
 }
 
 export function WorkCategories() {
+  const { workCategories } = usePortfolio();
+  const [playing, setPlaying] = useState<{ title: string; videoUrl: string } | null>(
+    null,
+  );
+
+  const longForm = workCategories.find((c) => c.slug === "long-form");
+  const shortForm = workCategories.find((c) => c.slug === "short-form");
+  const posters = workCategories.find((c) => c.slug === "posters");
+  const logos = workCategories.find((c) => c.slug === "logos");
+
   return (
     <>
-      <LongFormSection />
-      <ShortFormSection />
-      <PostersSection />
-      <LogosSection />
+      {longForm ? <LongFormSection category={longForm} onPlay={setPlaying} /> : null}
+      {shortForm ? <ShortFormSection category={shortForm} onPlay={setPlaying} /> : null}
+      {posters ? <PostersSection category={posters} /> : null}
+      {logos ? <LogosSection category={logos} /> : null}
+      {playing ? (
+        <WorkVideoModal
+          title={playing.title}
+          videoUrl={playing.videoUrl}
+          onClose={() => setPlaying(null)}
+        />
+      ) : null}
     </>
   );
 }

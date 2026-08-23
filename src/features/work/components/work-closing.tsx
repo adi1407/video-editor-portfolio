@@ -3,9 +3,10 @@
 import Link from "next/link";
 import TextLoop from "@/components/ui/TextLoop";
 import { buttonClassName, Container } from "@/components/ui";
-import { profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 export function WorkClosing() {
+  const { profile } = usePortfolio();
   return (
     <>
       <section

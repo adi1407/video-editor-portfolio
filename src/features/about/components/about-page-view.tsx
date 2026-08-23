@@ -10,12 +10,7 @@ import ProfileCard from "@/components/ui/ProfileCard";
 import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container } from "@/components/ui";
-import {
-  profile,
-  services,
-  stats,
-  toolkit,
-} from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
   ssr: false,
@@ -23,7 +18,7 @@ const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
     <div className="relative aspect-[3/4] w-full max-w-sm overflow-hidden border border-border bg-surface">
       <Image
         src="/lanyard/raju.jpeg"
-        alt={profile.name}
+        alt="Portrait"
         fill
         className="object-cover"
         sizes="400px"
@@ -32,15 +27,15 @@ const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
   ),
 });
 
-const cards = services.map((service) => ({
-  color: "#060010",
-  label: service.label,
-  title: service.title,
-  description: service.description,
-}));
-
 export function AboutPageView() {
   const router = useRouter();
+  const { profile, services, stats, toolkit } = usePortfolio();
+  const cards = services.map((service) => ({
+    color: "#060010",
+    label: service.label,
+    title: service.title,
+    description: service.description,
+  }));
 
   return (
     <>

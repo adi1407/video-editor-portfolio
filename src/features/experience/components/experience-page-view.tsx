@@ -10,7 +10,7 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import TextLoop from "@/components/ui/TextLoop";
 import { buttonClassName, Container } from "@/components/ui";
-import { experience, profile, toolkit } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 const Ribbons = dynamic(() => import("@/components/ui/Ribbons"), {
   ssr: false,
@@ -24,16 +24,16 @@ const WarpText = dynamic(() => import("@/components/ui/WarpText"), {
   ),
 });
 
-const toolLogos = [...toolkit.videoMotion, ...toolkit.design].map((title) => ({
-  node: (
-    <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-foreground/90 sm:text-base">
-      {title}
-    </span>
-  ),
-  title,
-}));
-
 export function ExperiencePageView() {
+  const { experience, profile, toolkit } = usePortfolio();
+  const toolLogos = [...toolkit.videoMotion, ...toolkit.design].map((title) => ({
+    node: (
+      <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-foreground/90 sm:text-base">
+        {title}
+      </span>
+    ),
+    title,
+  }));
   return (
     <>
       <section className="relative overflow-hidden border-b border-border py-16 sm:py-24">

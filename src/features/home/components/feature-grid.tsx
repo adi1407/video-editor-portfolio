@@ -4,16 +4,16 @@ import Link from "next/link";
 import FoldText from "@/components/ui/FoldText";
 import MagicBento from "@/components/ui/MagicBento";
 import { buttonClassName, Container } from "@/components/ui";
-import { profile, services } from "@/features/home/content";
-
-const cards = services.map((service) => ({
-  color: "#060010",
-  label: service.label,
-  title: service.title,
-  description: service.description,
-}));
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 export function FeatureGrid() {
+  const { profile, services } = usePortfolio();
+  const cards = services.map((service) => ({
+    color: "#060010",
+    label: service.label,
+    title: service.title,
+    description: service.description,
+  }));
   return (
     <section id="services" className="scroll-mt-24 py-20 sm:py-24">
       <Container className="flex flex-col items-center gap-10 sm:gap-14">

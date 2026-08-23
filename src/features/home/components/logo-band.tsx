@@ -2,18 +2,18 @@
 
 import LogoLoop from "@/components/ui/LogoLoop";
 import { Container } from "@/components/ui";
-import { toolkit } from "@/features/home/content";
-
-const toolLogos = [...toolkit.videoMotion, ...toolkit.design].map((title) => ({
-  node: (
-    <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-foreground/90 sm:text-base">
-      {title}
-    </span>
-  ),
-  title,
-}));
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 export function LogoBand() {
+  const { toolkit } = usePortfolio();
+  const toolLogos = [...toolkit.videoMotion, ...toolkit.design].map((title) => ({
+    node: (
+      <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-foreground/90 sm:text-base">
+        {title}
+      </span>
+    ),
+    title,
+  }));
   return (
     <section
       id="toolkit"

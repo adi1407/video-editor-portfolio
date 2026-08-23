@@ -6,7 +6,7 @@ import Link from "next/link";
 import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container, Input } from "@/components/ui";
-import { contact, profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 const Orb = dynamic(() => import("@/components/ui/Orb"), {
   ssr: false,
@@ -14,6 +14,7 @@ const Orb = dynamic(() => import("@/components/ui/Orb"), {
 });
 
 export function ContactPageView() {
+  const { contact, profile } = usePortfolio();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");

@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { buttonClassName, Container } from "@/components/ui";
-import { experience, profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 export function ExperienceBand() {
+  const { experience, profile } = usePortfolio();
   return (
     <section
       id="experience"

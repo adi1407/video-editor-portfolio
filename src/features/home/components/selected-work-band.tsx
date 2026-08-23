@@ -5,25 +5,26 @@ import Link from "next/link";
 import ChromaGrid, { type ChromaItem } from "@/components/ui/ChromaGrid";
 import FoldText from "@/components/ui/FoldText";
 import { buttonClassName, Container } from "@/components/ui";
-import { profile, selectedWork } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 import { useMediaQuery, useMounted } from "@/hooks";
 
-const chromaItems: ChromaItem[] = selectedWork.map((item, index) => {
-  const accents = ["#A78BFA", "#5227FF", "#38BDF8", "#F472B6"];
-  const color = accents[index % accents.length];
-  return {
-    image: item.image,
-    title: item.title,
-    subtitle: item.subtitle,
-    borderColor: color,
-    gradient: `linear-gradient(145deg, ${color}, #05070c)`,
-    url: item.href,
-  };
-});
-
 export function SelectedWorkBand() {
+  const { profile, selectedWork } = usePortfolio();
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const chromaItems: ChromaItem[] = selectedWork.map((item, index) => {
+    const accents = ["#A78BFA", "#5227FF", "#38BDF8", "#F472B6"];
+    const color = accents[index % accents.length];
+    return {
+      image: item.image,
+      title: item.title,
+      subtitle: item.subtitle,
+      borderColor: color,
+      gradient: `linear-gradient(145deg, ${color}, #05070c)`,
+      url: item.href,
+    };
+  });
 
   return (
     <section

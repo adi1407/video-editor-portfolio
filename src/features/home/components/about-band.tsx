@@ -4,9 +4,10 @@ import Link from "next/link";
 import FoldText from "@/components/ui/FoldText";
 import ShinyText from "@/components/ui/ShinyText";
 import { buttonClassName, Container } from "@/components/ui";
-import { profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 
 export function AboutBand() {
+  const { profile } = usePortfolio();
   return (
     <section id="about" className="scroll-mt-24 py-20 sm:py-24">
       <Container className="flex max-w-3xl flex-col gap-6">

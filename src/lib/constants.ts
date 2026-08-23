@@ -6,6 +6,8 @@ export const ROUTES = {
   work: "/work",
   experience: "/experience",
   contact: "/contact",
+  admin: "/admin",
+  adminLogin: "/admin/login",
   login: "/login",
   register: "/register",
   dashboard: "/dashboard",

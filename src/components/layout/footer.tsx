@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 import TextPressure from "@/components/ui/TextPressure";
 import { Container } from "@/components/ui";
 import { siteConfig, navLinks } from "@/config/site";
-import { profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 import { useMediaQuery } from "@/hooks";
 
 export function Footer() {
+  const { profile } = usePortfolio();
   const [reducedMotion, setReducedMotion] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 

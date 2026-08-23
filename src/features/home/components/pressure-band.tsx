@@ -1,10 +1,11 @@
 "use client";
 
 import ParticleText from "@/components/ui/ParticleText";
-import { profile } from "@/features/home/content";
+import { usePortfolio } from "@/features/portfolio/portfolio-context";
 import { useMediaQuery, useMounted } from "@/hooks";
 
 export function PressureBand() {
+  const { profile } = usePortfolio();
   const mounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
