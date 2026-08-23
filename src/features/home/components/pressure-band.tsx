@@ -2,8 +2,25 @@
 
 import ParticleText from "@/components/ui/ParticleText";
 import { profile } from "@/features/home/content";
+import { useMediaQuery, useMounted } from "@/hooks";
 
 export function PressureBand() {
+  const mounted = useMounted();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  if (!mounted || !isDesktop) {
+    return (
+      <section
+        aria-label="Purpose"
+        className="border-y border-border bg-[#09090f] px-4 py-14 text-center sm:py-16"
+      >
+        <p className="font-display text-[clamp(1.5rem,7vw,3rem)] font-bold tracking-tight text-foreground">
+          {profile.tagline}
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section
       aria-label="Purpose"

@@ -9,17 +9,22 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container } from "@/components/ui";
 import { profile } from "@/features/home/content";
+import { useMediaQuery, useMounted } from "@/hooks";
 
 const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full min-h-[320px] w-full items-center justify-center text-sm text-muted">
+    <div className="flex h-full min-h-[280px] w-full items-center justify-center text-sm text-muted">
       Loading badge…
     </div>
   ),
 });
 
 export function Hero() {
+  const mounted = useMounted();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const strokeSize = !mounted || !isDesktop ? 40 : 96;
+
   return (
     <section className="relative min-h-[100svh] overflow-hidden border-b border-border">
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
@@ -35,7 +40,7 @@ export function Hero() {
             pulseLength={0.28}
             pulseBlend={1}
             pulseWidth={1}
-            cableCount={20}
+            cableCount={mounted && isDesktop ? 20 : 10}
             thickness={0.35}
             rimWidth={0.15}
             waviness={0.3}
@@ -48,7 +53,7 @@ export function Hero() {
             fadeFar={2}
             brightness={1.0}
             colorVariance
-            grain
+            grain={Boolean(mounted && isDesktop)}
             grainIntensity={0.05}
             opacity={1.0}
             mouseInteraction={false}
@@ -58,8 +63,8 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/20" />
       </div>
 
-      <Container className="relative z-10 grid min-h-[100svh] items-center gap-10 py-24 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-6 lg:py-28">
-        <div className="flex flex-col gap-6">
+      <Container className="relative z-10 grid min-h-[100svh] items-center gap-8 py-20 sm:gap-10 sm:py-24 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-6 lg:py-28">
+        <div className="flex flex-col gap-5 sm:gap-6">
           <ShinyText
             text={profile.role}
             speed={2.4}
@@ -68,7 +73,7 @@ export function Hero() {
             className="text-xs font-semibold uppercase tracking-[0.18em]"
           />
 
-          <div className="w-full max-w-3xl">
+          <div className="w-full max-w-3xl overflow-hidden">
             <h1 className="sr-only">
               {profile.tagline} {profile.heroIntro}
             </h1>
@@ -77,15 +82,15 @@ export function Hero() {
               strokeColor="#A78BFA"
               fillColor="#F8FAFC"
               strokeWidth={1.35}
-              drawDuration={1.4}
-              fillDelay={0.15}
-              stagger={0.04}
+              drawDuration={1.2}
+              fillDelay={0.12}
+              stagger={0.03}
               ease="power2.out"
               trigger="mount"
               fillMode="wipe"
-              fontSize={96}
+              fontSize={strokeSize}
               fontWeight={800}
-              letterSpacing={-3}
+              letterSpacing={-2}
               className="max-w-full"
             />
             <div className="-mt-1 sm:-mt-2">
@@ -96,7 +101,7 @@ export function Hero() {
                 hinge="bottom"
                 duration={0.85}
                 stagger={0.06}
-                fontSize="clamp(2rem, 6vw, 4.5rem)"
+                fontSize="clamp(1.75rem, 6vw, 4.5rem)"
                 fontWeight={800}
                 color="#F8FAFC"
               />
@@ -150,7 +155,7 @@ export function Hero() {
           <p className="text-sm text-muted">{profile.scrollHint}</p>
         </div>
 
-        <div className="relative h-[min(70svh,560px)] w-full lg:h-[min(80svh,680px)]">
+        <div className="relative mx-auto h-[min(55svh,420px)] w-full max-w-md lg:mx-0 lg:h-[min(80svh,680px)] lg:max-w-none">
           <Lanyard
             className="h-full w-full"
             position={[0, 0, 22]}
