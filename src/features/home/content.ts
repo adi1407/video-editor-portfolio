@@ -7,20 +7,36 @@ export const profile = {
   heroIntro:
     "I'm Raju Jha — a Video Editor and Visual Designer crafting stories through motion, design, and creativity.",
   heroBody:
-    "Specializing in long-form videos, short-form content, motion graphics, posters, and brand visuals. Combining storytelling, design, and motion to turn ideas into content people remember.",
+    "Specializing in long-format videos, short-format content, posters, and logos. Combining storytelling, design, and motion to turn ideas into content people remember.",
   scrollHint: "Scroll to explore the work. ↓",
   aboutHeadline: "I don't just edit videos—I shape how stories are seen.",
   aboutBody: [
     "With experience in both freelance and professional creative work, I specialize in combining video editing, motion, and visual design to create content that is engaging, polished, and built to make an impact.",
-    "From a fast-paced 15-second reel to a detailed long-form video, from a promotional poster to a complete visual concept, I enjoy turning ideas into visuals that connect with people.",
+    "From a fast-paced 15-second reel to a detailed long-format video, from a promotional poster to a logo that anchors a brand, I enjoy turning ideas into visuals that connect with people.",
   ] as const,
   profileBlurb:
-    "I transform raw ideas and footage into engaging visual stories—from high-impact short-form content to cinematic long-form videos, motion graphics, posters, logos, and digital creatives.",
+    "I transform raw ideas and footage into engaging visual stories—from high-impact short-format content to cinematic long-format videos, posters, logos, and digital creatives.",
   ctas: {
     work: { label: "Explore My Work", href: "/work" },
-    contact: { label: "Let's Create Something", href: "/#contact" },
+    contact: { label: "Let's Create Something", href: "/contact" },
     experience: { label: "View experience", href: "/experience" },
     about: { label: "About Raju", href: "/about" },
+  },
+} as const;
+
+export const contact = {
+  eyebrow: "Get in touch",
+  headline: "Let's shape the next frame",
+  body: "Share the brief, references, and deadline — I'll reply with availability and next steps.",
+  email: "hello@example.com",
+  form: {
+    nameLabel: "Name",
+    emailLabel: "Email",
+    messageLabel: "Message",
+    submitLabel: "Send message",
+    namePlaceholder: "Your name",
+    emailPlaceholder: "you@studio.com",
+    messagePlaceholder: "Project type, timeline, links…",
   },
 } as const;
 
@@ -28,51 +44,37 @@ export const stats = [
   { value: "1+", label: "Years Freelance Experience" },
   { value: "8", label: "Months Professional Experience" },
   { value: "7+", label: "Tools in Creative Toolkit" },
-  { value: "Multi", label: "Formats — Video, Motion & Design" },
+  { value: "4", label: "Lanes — Video, Short, Posters & Logos" },
 ] as const;
 
 export const services = [
   {
     label: "Video",
-    title: "Long-Form Videos",
+    title: "Long Format Videos",
     description:
       "YouTube videos, interviews, podcasts, storytelling content, promotional videos, and other narrative-driven edits.",
-    href: "/work#video",
+    href: "/work#long-form",
   },
   {
     label: "Social",
-    title: "Short-Form Content",
+    title: "Short Format",
     description:
       "Reels, Shorts, Instagram content, fast-paced social media videos, and attention-grabbing edits.",
     href: "/work#short-form",
   },
   {
-    label: "Motion",
-    title: "Motion Graphics",
+    label: "Print",
+    title: "Posters",
     description:
-      "Animated text, transitions, visual effects, graphics, and motion-based storytelling.",
-    href: "/work#motion",
-  },
-  {
-    label: "Design",
-    title: "Graphic Design",
-    description:
-      "Posters, social media creatives, promotional assets, and digital designs.",
+      "Campaign posters, social creatives, promotional assets, and digital designs that stop the scroll.",
     href: "/work#posters",
   },
   {
     label: "Brand",
-    title: "Logo & Brand Visuals",
+    title: "Logos",
     description:
-      "Logo concepts and visual assets that help create a recognizable brand identity.",
-    href: "/work#posters",
-  },
-  {
-    label: "Story",
-    title: "Visual Storytelling",
-    description:
-      "Turning raw ideas and footage into polished stories people finish watching—and remember.",
-    href: "/work#video",
+      "Logo concepts and brand marks that help create a recognizable visual identity.",
+    href: "/work#logos",
   },
 ] as const;
 
@@ -98,8 +100,8 @@ export const experience = [
     summary:
       "Worked on creating and editing visual content for digital platforms and brand communication.",
     highlights: [
-      "Editing long-form videos",
-      "Creating engaging short-form videos and reels",
+      "Editing long-format videos",
+      "Creating engaging short-format videos and reels",
       "Motion graphics and visual effects",
       "Social media creatives",
       "Posters and promotional designs",
@@ -114,36 +116,53 @@ export const experience = [
     summary:
       "Worked independently with clients on a variety of creative projects, including video editing and graphic design.",
     highlights: [
-      "Short-form social media content",
-      "Long-form video editing",
+      "Short-format social media content",
+      "Long-format video editing",
       "Promotional and marketing videos",
       "Posters and social media creatives",
       "Logo design",
-      "Motion graphics",
       "Brand visuals and creative assets",
     ],
   },
 ] as const;
 
 export const selectedWork = [
-  { image: "/work/p-01.jpg", title: "Long-form edit", href: "/work#video" },
-  { image: "/work/p-02.jpg", title: "Short-form reel", href: "/work#short-form" },
-  { image: "/work/p-03.jpg", title: "Motion graphics", href: "/work#motion" },
-  { image: "/work/p-04.jpg", title: "Poster design", href: "/work#posters" },
-  { image: "/work/p-05.jpg", title: "Brand visual", href: "/work#posters" },
-  { image: "/work/p-06.jpg", title: "Social creative", href: "/work#short-form" },
+  {
+    image: "/work/p-01.jpg",
+    title: "Long-format edit",
+    subtitle: "Narrative · YouTube",
+    href: "/work#long-form",
+  },
+  {
+    image: "/work/p-02.jpg",
+    title: "Short-format reel",
+    subtitle: "Reels · Social",
+    href: "/work#short-form",
+  },
+  {
+    image: "/work/p-04.jpg",
+    title: "Campaign poster",
+    subtitle: "Poster · Print",
+    href: "/work#posters",
+  },
+  {
+    image: "/work/p-05.jpg",
+    title: "Brand mark",
+    subtitle: "Logo · Identity",
+    href: "/work#logos",
+  },
 ] as const;
 
 export const workCategories = [
   {
-    id: "video",
-    slug: "video",
-    title: "Video Projects",
+    id: "long-form",
+    slug: "long-form",
+    title: "Long Format Videos",
     blurb:
-      "Long-form edits for YouTube, interviews, podcasts, storytelling, and promotional films — paced for clarity and emotion.",
+      "Long-format edits for YouTube, interviews, podcasts, storytelling, and promotional films — paced for clarity and emotion.",
     items: [
       {
-        title: "Narrative long-form",
+        title: "Narrative long-format",
         image: "/work/p-01.jpg",
         tags: ["YouTube", "Story"],
       },
@@ -162,7 +181,7 @@ export const workCategories = [
   {
     id: "short-form",
     slug: "short-form",
-    title: "Short-Form Content",
+    title: "Short Format",
     blurb:
       "Reels, Shorts, and fast social edits built for the first frame — hooks that hold attention.",
     items: [
@@ -178,41 +197,17 @@ export const workCategories = [
       },
       {
         title: "Campaign cutdowns",
-        image: "/work/p-04.jpg",
-        tags: ["Ads", "Feed"],
-      },
-    ],
-  },
-  {
-    id: "motion",
-    slug: "motion",
-    title: "Motion Graphics",
-    blurb:
-      "Animated type, transitions, VFX, and motion-led storytelling that lifts every cut.",
-    items: [
-      {
-        title: "Title & type motion",
         image: "/work/p-03.jpg",
-        tags: ["Type", "AE"],
-      },
-      {
-        title: "Transition system",
-        image: "/work/p-01.jpg",
-        tags: ["FX", "Flow"],
-      },
-      {
-        title: "Explainer motion",
-        image: "/work/p-05.jpg",
-        tags: ["Motion", "Brand"],
+        tags: ["Ads", "Feed"],
       },
     ],
   },
   {
     id: "posters",
     slug: "posters",
-    title: "Posters & Designs",
+    title: "Posters",
     blurb:
-      "Posters, social creatives, logos, and brand visuals — assets that make an identity stick.",
+      "Campaign posters, social creatives, and promotional assets — designs that make an idea stick.",
     items: [
       {
         title: "Campaign poster",
@@ -225,9 +220,33 @@ export const workCategories = [
         tags: ["Social", "Design"],
       },
       {
+        title: "Promo key art",
+        image: "/work/p-01.jpg",
+        tags: ["Promo", "Key art"],
+      },
+    ],
+  },
+  {
+    id: "logos",
+    slug: "logos",
+    title: "Logos",
+    blurb:
+      "Logo concepts and brand marks that build a recognizable visual identity.",
+    items: [
+      {
         title: "Logo & brand mark",
         image: "/work/p-05.jpg",
         tags: ["Logo", "Brand"],
+      },
+      {
+        title: "Identity lockup",
+        image: "/work/p-03.jpg",
+        tags: ["Identity", "Type"],
+      },
+      {
+        title: "Brand system mark",
+        image: "/work/p-02.jpg",
+        tags: ["System", "Mark"],
       },
     ],
   },

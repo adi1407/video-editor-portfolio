@@ -37,7 +37,7 @@ export function FeatureGrid() {
             className="text-center"
           />
           <p className="max-w-xl text-base leading-7 text-muted">
-            Long-form, short-form, motion, posters, and brand visuals — explore the full
+            Long format, short format, posters, and logos — explore the full
             archive on the work page.
           </p>
           <Link href={profile.ctas.work.href} className={buttonClassName({ variant: "outline" })}>

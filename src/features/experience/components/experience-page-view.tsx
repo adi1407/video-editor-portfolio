@@ -1,11 +1,37 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
+import BlurText from "@/components/ui/BlurText";
 import FoldText from "@/components/ui/FoldText";
-import Ribbons from "@/components/ui/Ribbons";
+import LogoLoop from "@/components/ui/LogoLoop";
+import ParticleText from "@/components/ui/ParticleText";
 import ShinyText from "@/components/ui/ShinyText";
+import StrokeText from "@/components/ui/StrokeText";
+import TextLoop from "@/components/ui/TextLoop";
 import { buttonClassName, Container } from "@/components/ui";
 import { experience, profile, toolkit } from "@/features/home/content";
+
+const Ribbons = dynamic(() => import("@/components/ui/Ribbons"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const WarpText = dynamic(() => import("@/components/ui/WarpText"), {
+  ssr: false,
+  loading: () => (
+    <p className="text-base text-muted">The timeline behind every frame.</p>
+  ),
+});
+
+const toolLogos = [...toolkit.videoMotion, ...toolkit.design].map((title) => ({
+  node: (
+    <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-foreground/90 sm:text-base">
+      {title}
+    </span>
+  ),
+  title,
+}));
 
 export function ExperiencePageView() {
   return (
@@ -30,22 +56,72 @@ export function ExperiencePageView() {
             className="text-xs font-semibold uppercase tracking-[0.22em]"
           />
           <h1 className="sr-only">Experience — Raju Jha</h1>
-          <FoldText
+          <StrokeText
             text="Experience"
-            splitBy="char"
-            hinge="top"
-            trigger="mount"
-            duration={0.7}
+            strokeColor="#A78BFA"
+            fillColor="#F8FAFC"
+            strokeWidth={1.3}
+            drawDuration={1.4}
+            fillDelay={0.15}
             stagger={0.04}
-            fontSize="clamp(3rem, 10vw, 6rem)"
+            ease="power2.out"
+            trigger="mount"
+            fillMode="wipe"
+            fontSize={96}
             fontWeight={800}
-            color="#F8FAFC"
+            letterSpacing={-3}
+            className="max-w-full"
           />
-          <p className="max-w-2xl text-base leading-7 text-muted sm:text-lg">
-            Professional work at IUI Solutions and a year of freelance craft — the
-            timeline behind every frame.
-          </p>
+          <div className="relative h-[72px] w-full max-w-2xl sm:h-[90px]">
+            <WarpText
+              text="Professional craft · Freelance hustle · Every frame"
+              color="#94a3b8"
+              warpStrength={0.4}
+              warpScale={2}
+              speed={0.3}
+              pointerInfluence={0.5}
+              fontSize="clamp(1rem, 2.2vw, 1.35rem)"
+              fontWeight={600}
+              className="h-full w-full"
+            />
+          </div>
         </Container>
+      </section>
+
+      <section className="border-b border-border py-12 sm:py-16">
+        <Container className="flex justify-center">
+          <BlurText
+            text="Built across long format, short format, posters, and logos."
+            delay={80}
+            animateBy="words"
+            direction="top"
+            className="max-w-3xl text-center font-display text-2xl font-medium text-foreground sm:text-3xl"
+          />
+        </Container>
+      </section>
+
+      <section
+        aria-label="Purpose"
+        className="relative h-[280px] w-full overflow-hidden border-b border-border bg-[#09090f] sm:h-[320px]"
+      >
+        <ParticleText
+          text="PURPOSE"
+          particleSize={2}
+          density={5}
+          color="#ffffff"
+          highlightColor="#8b5cf6"
+          scatter={160}
+          gatherDuration={1500}
+          stagger={380}
+          pointerRepel={36}
+          repelRadius={110}
+          idleDrift={0.65}
+          trigger="hover"
+          fontSize="clamp(3rem, 12vw, 7rem)"
+          fontWeight={800}
+          fontFamily="inherit"
+          glow
+        />
       </section>
 
       <section className="border-b border-border py-16 sm:py-20">
@@ -59,9 +135,18 @@ export function ExperiencePageView() {
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                   0{index + 1}
                 </p>
-                <h2 className="mt-3 font-display text-2xl font-medium sm:text-3xl">
-                  {job.company}
-                </h2>
+                <FoldText
+                  text={job.company}
+                  splitBy="word"
+                  hinge="bottom"
+                  trigger="scroll"
+                  duration={0.55}
+                  stagger={0.04}
+                  fontSize="clamp(1.5rem, 3vw, 2rem)"
+                  fontWeight={600}
+                  color="#F8FAFC"
+                  className="mt-3"
+                />
                 <p className="mt-2 text-sm font-semibold text-foreground">{job.role}</p>
                 <p className="mt-1 text-sm text-muted">{job.period}</p>
               </div>
@@ -81,29 +166,55 @@ export function ExperiencePageView() {
         </Container>
       </section>
 
-      <section className="border-b border-border py-16 sm:py-20">
-        <Container className="grid gap-10 sm:grid-cols-2">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
-              Video & Motion toolkit
-            </h2>
-            <ul className="mt-4 flex flex-col gap-2 text-base text-foreground/90">
-              {toolkit.videoMotion.map((tool) => (
-                <li key={tool}>{tool}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
-              Design toolkit
-            </h2>
-            <ul className="mt-4 flex flex-col gap-2 text-base text-foreground/90">
-              {toolkit.design.map((tool) => (
-                <li key={tool}>{tool}</li>
-              ))}
-            </ul>
-          </div>
+      <section
+        aria-label="Tagline marquee"
+        className="overflow-hidden border-b border-border py-6 sm:py-10"
+      >
+        <TextLoop
+          text="EVERY FRAME HAS A PURPOSE"
+          shape="wave"
+          speed={90}
+          direction="forward"
+          separator="✦"
+          curviness={90}
+          fontSize={36}
+          fontWeight={800}
+          letterSpacing={2}
+          uppercase
+          color="#ffffff"
+          ribbon
+          ribbonColor="#5227FF"
+          ribbonWidth={80}
+          pauseOnHover
+        />
+      </section>
+
+      <section
+        aria-label="Creative toolkit"
+        className="border-b border-border bg-surface py-10 sm:py-12"
+      >
+        <Container className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+            Creative toolkit
+          </p>
+          <p className="mt-2 text-sm text-muted">
+            Video & motion · Design — the tools behind every frame.
+          </p>
         </Container>
+        <div className="relative h-[72px] overflow-hidden sm:h-[88px]">
+          <LogoLoop
+            logos={toolLogos}
+            speed={90}
+            direction="left"
+            logoHeight={28}
+            gap={56}
+            hoverSpeed={0}
+            scaleOnHover
+            fadeOut
+            fadeOutColor="#05070c"
+            ariaLabel="Creative toolkit"
+          />
+        </div>
       </section>
 
       <section className="py-16 sm:py-20">
@@ -113,7 +224,7 @@ export function ExperiencePageView() {
               See the work this experience built
             </h2>
             <p className="mt-3 text-muted">
-              Explore categories across video, short-form, motion, and design.
+              Explore long format, short format, posters, and logos.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">

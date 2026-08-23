@@ -3,8 +3,10 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import FoldText from "@/components/ui/FoldText";
 import MagicBento from "@/components/ui/MagicBento";
+import ProfileCard from "@/components/ui/ProfileCard";
 import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container } from "@/components/ui";
@@ -30,7 +32,7 @@ const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
   ),
 });
 
-const cards = services.slice(0, 6).map((service) => ({
+const cards = services.map((service) => ({
   color: "#060010",
   label: service.label,
   title: service.title,
@@ -38,6 +40,8 @@ const cards = services.slice(0, 6).map((service) => ({
 }));
 
 export function AboutPageView() {
+  const router = useRouter();
+
   return (
     <>
       <section className="border-b border-border py-16 sm:py-24">
@@ -118,15 +122,39 @@ export function AboutPageView() {
       </section>
 
       <section className="border-b border-border py-16 sm:py-20">
-        <Container className="flex flex-col items-center gap-10">
-          <div className="text-center">
+        <Container className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div className="mx-auto w-full max-w-sm">
+            <ProfileCard
+              avatarUrl="/lanyard/raju.jpeg"
+              miniAvatarUrl="/lanyard/raju.jpeg"
+              iconUrl="/assets/demo/iconpattern.png"
+              name={profile.name}
+              title={profile.shortRole}
+              handle="raju"
+              status="Available"
+              contactText="Contact"
+              showUserInfo
+              enableTilt
+              onContactClick={() => router.push(profile.ctas.contact.href)}
+            />
+          </div>
+          <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               What I do
             </p>
             <h2 className="mt-3 font-display text-3xl font-medium sm:text-4xl">
-              Formats I shape
+              Four lanes of craft
             </h2>
+            <p className="mt-4 max-w-xl text-base leading-7 text-muted">
+              Long format videos, short format, posters, and logos — the formats I
+              shape every week.
+            </p>
           </div>
+        </Container>
+      </section>
+
+      <section className="border-b border-border py-16 sm:py-20">
+        <Container className="flex flex-col items-center gap-10">
           <MagicBento
             cards={cards}
             textAutoHide

@@ -16,7 +16,7 @@ export const siteConfig = {
   name: "Raju Jha",
   shortName: "Rjha",
   description:
-    "Video Editor and Visual Designer specializing in long-form videos, short-form content, motion graphics, posters, and brand visuals.",
+    "Video Editor and Visual Designer specializing in long-format videos, short-format content, posters, and logos.",
   url: resolveSiteUrl(),
   locale: "en_US",
   creator: "Raju Jha",
@@ -25,9 +25,10 @@ export const siteConfig = {
     "video editor",
     "motion designer",
     "graphic designer",
-    "short-form content",
-    "long-form video",
-    "motion graphics",
+    "short-format content",
+    "long-format video",
+    "posters",
+    "logos",
     "portfolio",
   ],
 } as const;
@@ -37,5 +38,5 @@ export const navLinks = [
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
   { href: "/about", label: "About" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/contact", label: "Contact" },
 ] as const;

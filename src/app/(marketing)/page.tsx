@@ -1,16 +1,12 @@
 import {
   AboutBand,
-  ContactBand,
-  DriftWallBand,
-  ExpandBand,
   ExperienceBand,
   FeatureGrid,
   Hero,
+  HomeCtaBand,
   LogoBand,
-  MarqueeBand,
-  OrbBand,
   PressureBand,
-  StatsBand,
+  SelectedWorkBand,
 } from "@/features/home";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
@@ -25,17 +21,13 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <LogoBand />
-      <ExpandBand />
-      <DriftWallBand />
+      <SelectedWorkBand />
       <FeatureGrid />
-      <OrbBand />
+      <LogoBand />
       <PressureBand />
-      <ExperienceBand />
-      <StatsBand />
       <AboutBand />
-      <MarqueeBand />
-      <ContactBand />
+      <ExperienceBand />
+      <HomeCtaBand />
     </>
   );
 }
