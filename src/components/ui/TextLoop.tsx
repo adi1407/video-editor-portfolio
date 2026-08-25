@@ -122,7 +122,7 @@ const TextLoop = ({
 
   const textStyle = useMemo<CSSProperties>(
     () => ({
-      fontFamily: 'var(--font-open-sans), "Open Sans", sans-serif',
+      fontFamily: 'Helvetica, "Helvetica Neue", Arial, sans-serif',
       fontSize: `${fontSize}px`,
       fontWeight,
       letterSpacing: `${letterSpacing}px`,

@@ -59,7 +59,7 @@ const renderWhitespace = (value: string, key: string): ReactNode[] =>
 const FOLD_TEXT_STYLES = `.fold-text {
   display: inline-block;
   color: var(--fold-text-color, currentColor);
-  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
   font-size: var(--fold-text-font-size, inherit);
   font-weight: var(--fold-text-font-weight, inherit);
   line-height: 0.95;

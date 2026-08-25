@@ -1,7 +1,6 @@
 "use client";
 
-// Component ported from https://codepen.io/JuanFuentes/full/rgXKGQ
-// Variable font: Roboto Flex (opsz / wdth / wght) — Compressa-style pressure needs a VF.
+// Helvetica site-wide; variable-font axes (wdth/wght) degrade gracefully on static fonts.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -46,8 +45,8 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
 
 const TextPressure = ({
   text = "Compressa",
-  fontFamily = "Roboto Flex",
-  fontUrl = "https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap",
+  fontFamily = 'Helvetica, "Helvetica Neue", Arial, sans-serif',
+  fontUrl = "",
   width = true,
   weight = true,
   italic = true,
@@ -180,7 +179,7 @@ const TextPressure = ({
   const styleElement = useMemo(() => {
     return (
       <style>{`
-        @import url('${fontUrl}');
+        ${fontUrl ? `@import url('${fontUrl}');` : ""}
         .stroke span {
           position: relative;
           color: ${textColor};

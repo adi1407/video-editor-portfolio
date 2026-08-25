@@ -34,8 +34,8 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
   --color-danger: var(--danger);
-  --font-sans: var(--font-open-sans);
-  --font-display: var(--font-playfair);
+  --font-sans: Helvetica, "Helvetica Neue", Arial, sans-serif;
+  --font-display: Helvetica, "Helvetica Neue", Arial, sans-serif;
 }
 
 html {
@@ -58,7 +58,7 @@ body {
 body {
   position: relative;
   min-height: 100%;
-  font-family: var(--font-open-sans), "Open Sans", sans-serif;
+  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
   letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -73,7 +73,7 @@ h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-playfair), "Playfair Display", serif;
+  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
   letter-spacing: -0.02em;
 }
 
