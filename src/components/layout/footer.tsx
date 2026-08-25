@@ -6,12 +6,10 @@ import TextPressure from "@/components/ui/TextPressure";
 import { Container } from "@/components/ui";
 import { siteConfig, navLinks } from "@/config/site";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMediaQuery } from "@/hooks";
 
 export function Footer() {
   const { profile } = usePortfolio();
   const [reducedMotion, setReducedMotion] = useState(false);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -21,18 +19,20 @@ export function Footer() {
     return () => media.removeEventListener("change", sync);
   }, []);
 
-  const usePressure = isDesktop && !reducedMotion;
-
   return (
     <footer className="mt-auto border-t border-border bg-surface">
-      <Container className="flex flex-col gap-8 py-10 sm:gap-10 sm:py-16">
+      <Container className="flex flex-col gap-10 py-12 sm:py-16">
         <Link
           href="/"
           aria-label={`${profile.name} — home`}
-          className="group relative block w-full outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="relative block w-full outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          {usePressure ? (
-            <div className="mx-auto h-[min(28vw,12rem)] w-full max-w-5xl sm:h-[min(22vw,14rem)]">
+          {reducedMotion ? (
+            <span className="block w-full py-4 text-center font-display text-[clamp(4.5rem,22vw,14rem)] font-medium leading-none tracking-tight text-foreground">
+              RAJU
+            </span>
+          ) : (
+            <div className="mx-auto h-[clamp(7rem,18vw,14rem)] w-full">
               <TextPressure
                 text="RAJU"
                 flex
@@ -47,17 +47,6 @@ export function Footer() {
                 minFontSize={36}
               />
             </div>
-          ) : (
-            <span
-              className="block w-full overflow-visible py-2 text-center font-display text-[clamp(3.25rem,18vw,8rem)] font-medium leading-[0.9] tracking-[-0.04em] text-foreground transition-[letter-spacing,color,text-shadow] duration-500 ease-out group-hover:tracking-[0.06em] group-hover:text-[#c4b5fd] group-hover:shadow-none group-active:tracking-[0.06em] group-active:text-[#c4b5fd]"
-              style={{
-                textShadow: "0 0 0 transparent",
-              }}
-            >
-              <span className="inline-block transition-[text-shadow] duration-500 group-hover:[text-shadow:0_0_28px_rgba(168,85,247,0.45)] group-active:[text-shadow:0_0_28px_rgba(168,85,247,0.45)]">
-                RAJU
-              </span>
-            </span>
           )}
         </Link>
 

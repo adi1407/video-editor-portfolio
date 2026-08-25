@@ -62,13 +62,14 @@ export function SelectedWorkBand() {
       </Container>
 
       {mounted && isDesktop ? (
-        <div className="relative mx-auto h-[560px] w-full max-w-6xl px-4 sm:px-6">
+        <div className="relative mx-auto h-auto min-h-[420px] w-full max-w-6xl px-4 sm:px-6 lg:min-h-[480px]">
           <ChromaGrid
-            items={chromaItems}
-            radius={300}
+            items={chromaItems.slice(0, 4)}
+            radius={280}
             damping={0.45}
             fadeOut={0.6}
             ease="power3.out"
+            className="!h-auto"
           />
         </div>
       ) : (
