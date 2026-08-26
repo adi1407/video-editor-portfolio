@@ -4,7 +4,7 @@ import { env, isSupabaseConfigured } from "@/config/env";
 import type { Database } from "@/types/database";
 
 export async function createServerSupabaseClient() {
-  if (!isSupabaseConfigured) {
+  if (!isSupabaseConfigured()) {
     return null;
   }
 

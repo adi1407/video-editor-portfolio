@@ -10,7 +10,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) {
+    if (!isSupabaseConfigured()) {
       setLoading(false);
       return;
     }
@@ -46,5 +46,5 @@ export function useAuth() {
     return () => subscription.unsubscribe();
   }, []);
 
-  return { user, loading, configured: isSupabaseConfigured };
+  return { user, loading, configured: isSupabaseConfigured() };
 }

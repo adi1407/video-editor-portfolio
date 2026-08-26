@@ -2,8 +2,20 @@ function trimEnv(value: string | undefined) {
   return value?.trim() ?? "";
 }
 
+/** Literal process.env.* access so Next.js inlines / includes these correctly. */
+export function getSupabaseUrl() {
+  return trimEnv(process.env.NEXT_PUBLIC_SUPABASE_URL);
+}
+
+export function getSupabaseAnonKey() {
+  return trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+}
+
+export function getSupabaseServiceRoleKey() {
+  return trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
+
 function resolveSiteUrl() {
-  // Direct process.env.* access — Next.js only inlines these when written literally
   const explicit = trimEnv(process.env.NEXT_PUBLIC_SITE_URL);
   if (explicit) {
     return explicit.replace(/\/$/, "");
@@ -17,13 +29,30 @@ function resolveSiteUrl() {
   return "http://localhost:3000";
 }
 
+/** Live getters — do not cache secrets/URL at module load. */
 export const env = {
-  supabaseUrl: trimEnv(process.env.NEXT_PUBLIC_SUPABASE_URL),
-  supabaseAnonKey: trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
-  supabaseServiceRoleKey: trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY),
-  siteUrl: resolveSiteUrl(),
+  get supabaseUrl() {
+    return getSupabaseUrl();
+  },
+  get supabaseAnonKey() {
+    return getSupabaseAnonKey();
+  },
+  get supabaseServiceRoleKey() {
+    return getSupabaseServiceRoleKey();
+  },
+  get siteUrl() {
+    return resolveSiteUrl();
+  },
 };
 
-export const isSupabaseConfigured = Boolean(
-  env.supabaseUrl && env.supabaseAnonKey,
-);
+export function isSupabaseConfigured() {
+  return Boolean(getSupabaseUrl() && getSupabaseAnonKey());
+}
+
+export function getSupabaseEnvFlags() {
+  return {
+    hasUrl: Boolean(getSupabaseUrl()),
+    hasAnon: Boolean(getSupabaseAnonKey()),
+    hasServiceRole: Boolean(getSupabaseServiceRoleKey()),
+  };
+}

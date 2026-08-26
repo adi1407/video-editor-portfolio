@@ -16,7 +16,7 @@ export async function signInAction(
     return { error: "Email and password are required." };
   }
 
-  if (!isSupabaseConfigured) {
+  if (!isSupabaseConfigured()) {
     return { error: SUPABASE_MISSING_MESSAGE };
   }
 
@@ -49,7 +49,7 @@ export async function signUpAction(
     return { error: "Password must be at least 8 characters." };
   }
 
-  if (!isSupabaseConfigured) {
+  if (!isSupabaseConfigured()) {
     return { error: SUPABASE_MISSING_MESSAGE };
   }
 
