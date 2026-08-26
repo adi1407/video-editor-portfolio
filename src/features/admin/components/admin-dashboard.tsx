@@ -29,6 +29,8 @@ type Props = {
   initial: PortfolioContent;
   initialWorkItems: WorkItem[];
   dbReady: boolean;
+  envFlags?: { hasUrl: boolean; hasAnon: boolean; hasServiceRole: boolean };
+  missingEnv?: string[];
 };
 
 function Field({
@@ -72,7 +74,13 @@ const emptyWork = (category: WorkCategorySlug): Omit<WorkItem, "id"> & { id?: st
   published: true,
 });
 
-export function AdminDashboard({ initial, initialWorkItems, dbReady }: Props) {
+export function AdminDashboard({
+  initial,
+  initialWorkItems,
+  dbReady,
+  envFlags,
+  missingEnv = [],
+}: Props) {
   const [tab, setTab] = useState<Tab>("work");
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -220,10 +228,37 @@ export function AdminDashboard({ initial, initialWorkItems, dbReady }: Props) {
       <Container className="flex flex-col gap-6 py-8">
         {!dbReady ? (
           <div className="border border-danger/40 bg-danger/10 p-4 text-sm text-danger">
-            Supabase service role is missing. Add{" "}
-            <code>SUPABASE_SERVICE_ROLE_KEY</code> (and URL/anon key), then run{" "}
-            <code>supabase/schema.sql</code> in the Supabase SQL editor. Until then,
-            admin saves will fail.
+            <p className="font-medium">Supabase is not ready on this deployment.</p>
+            <p className="mt-2">
+              Missing:{" "}
+              <code>
+                {missingEnv.length
+                  ? missingEnv.join(", ")
+                  : "SUPABASE_SERVICE_ROLE_KEY (or URL/anon)"}
+              </code>
+            </p>
+            <ul className="mt-2 list-inside list-disc text-danger/90">
+              <li>
+                URL: {envFlags?.hasUrl ? "ok" : "missing"} · Anon:{" "}
+                {envFlags?.hasAnon ? "ok" : "missing"} · Service role:{" "}
+                {envFlags?.hasServiceRole ? "ok" : "missing"}
+              </li>
+              <li>
+                On Vercel: Settings → Environment Variables → add exact names for{" "}
+                <strong>Production</strong> and <strong>Preview</strong>, then{" "}
+                <strong>Redeploy</strong>
+              </li>
+              <li>
+                Locally: put them in <code>.env.local</code>, stop all{" "}
+                <code>next dev</code> processes, run <code>npm run dev</code> again
+              </li>
+              <li>
+                Open <code>/api/health</code> — all flags must be true before saves work
+              </li>
+              <li>
+                Run <code>supabase/schema.sql</code> once in the Supabase SQL editor
+              </li>
+            </ul>
           </div>
         ) : null}
 

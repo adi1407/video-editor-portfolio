@@ -1,9 +1,13 @@
 import { redirect } from "next/navigation";
 import { AdminDashboard } from "@/features/admin/components/admin-dashboard";
+import { getMissingSupabaseEnvNames, getSupabaseEnvFlags } from "@/config/env";
 import { isAdminAuthenticated } from "@/lib/admin/auth";
 import { getPortfolio } from "@/lib/portfolio/get-portfolio";
 import { createServiceSupabaseClient, isAdminDbReady } from "@/lib/supabase/admin";
 import type { WorkCategorySlug, WorkItem } from "@/types/portfolio";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export const metadata = {
   title: "Admin",
@@ -17,8 +21,11 @@ export default async function AdminPage() {
 
   const portfolio = await getPortfolio();
   let workItems: WorkItem[] = portfolio.workItems;
+  const dbReady = isAdminDbReady();
+  const envFlags = getSupabaseEnvFlags();
+  const missingEnv = getMissingSupabaseEnvNames();
 
-  if (isAdminDbReady()) {
+  if (dbReady) {
     const client = createServiceSupabaseClient();
     if (client) {
       const { data } = await client
@@ -46,7 +53,9 @@ export default async function AdminPage() {
     <AdminDashboard
       initial={portfolio}
       initialWorkItems={workItems}
-      dbReady={isAdminDbReady()}
+      dbReady={dbReady}
+      envFlags={envFlags}
+      missingEnv={missingEnv}
     />
   );
 }

@@ -8,7 +8,7 @@ import {
   requireAdmin,
   verifyAdminCredentials,
 } from "@/lib/admin/auth";
-import { createServiceSupabaseClient, isAdminDbReady } from "@/lib/supabase/admin";
+import { createServiceSupabaseClient, isAdminDbReady, adminDbNotReadyMessage } from "@/lib/supabase/admin";
 import type {
   CategoryMeta,
   ContactContent,
@@ -29,8 +29,7 @@ function serviceClientOrError():
   if (!isAdminDbReady()) {
     return {
       ok: false,
-      error:
-        "Supabase is not fully configured. Set NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY.",
+      error: adminDbNotReadyMessage(),
     };
   }
   const client = createServiceSupabaseClient();

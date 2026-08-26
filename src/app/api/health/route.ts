@@ -4,6 +4,9 @@ import {
   isSupabaseConfigured,
 } from "@/config/env";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export function GET() {
   const flags = getSupabaseEnvFlags();
 

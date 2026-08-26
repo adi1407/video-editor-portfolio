@@ -81,12 +81,12 @@ export function AboutPageView() {
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto h-[min(70svh,520px)] w-full max-w-md lg:max-w-none">
+          <div className="relative mx-auto h-[min(68svh,480px)] w-full max-w-md touch-none sm:h-[min(70svh,520px)] lg:max-w-none">
             <Lanyard
               className="h-full w-full"
-              position={[0, 0, 24]}
-              gravity={[0, -26, 0]}
-              fov={18}
+              position={[0, 0, 22]}
+              gravity={[0, -28, 0]}
+              fov={20}
               frontImage="/lanyard/raju.jpeg"
               backImage="/lanyard/raju.jpeg"
               imageFit="cover"
