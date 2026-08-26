@@ -244,16 +244,19 @@ export function AdminDashboard({
                 {envFlags?.hasServiceRole ? "ok" : "missing"}
               </li>
               <li>
-                On Vercel: Settings → Environment Variables → add exact names for{" "}
-                <strong>Production</strong> and <strong>Preview</strong>, then{" "}
-                <strong>Redeploy</strong>
+                On Vercel add <strong>all</strong> of these for Production + Preview, then
+                Redeploy: <code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code>,{" "}
+                <code>SUPABASE_SERVICE_ROLE_KEY</code>, plus{" "}
+                <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
+                <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> (same URL/publishable values)
               </li>
               <li>
-                Locally: put them in <code>.env.local</code>, stop all{" "}
-                <code>next dev</code> processes, run <code>npm run dev</code> again
+                Locally: update <code>.env.local</code>, stop every{" "}
+                <code>next dev</code>, run <code>npm run dev</code> again
               </li>
               <li>
-                Open <code>/api/health</code> — all flags must be true before saves work
+                Confirm at <code>/api/health</code> — hasUrl, hasAnon, hasServiceRole all
+                true
               </li>
               <li>
                 Run <code>supabase/schema.sql</code> once in the Supabase SQL editor
