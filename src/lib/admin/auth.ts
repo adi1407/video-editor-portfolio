@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { env } from "@/config/env";
 
 export const ADMIN_COOKIE = "rjha_admin_session";
 
@@ -16,7 +15,7 @@ function adminPassword() {
 function sessionSecret() {
   return (
     process.env.ADMIN_SESSION_SECRET?.trim() ||
-    env.supabaseServiceRoleKey ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
     "rjha-admin-dev-secret-change-me"
   );
 }

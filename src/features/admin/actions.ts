@@ -26,7 +26,7 @@ type ActionResult = { ok: true } | { ok: false; error: string };
 function serviceClientOrError():
   | { ok: true; client: NonNullable<ReturnType<typeof createServiceSupabaseClient>> }
   | { ok: false; error: string } {
-  if (!isAdminDbReady) {
+  if (!isAdminDbReady()) {
     return {
       ok: false,
       error:

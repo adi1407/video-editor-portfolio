@@ -18,7 +18,7 @@ export default async function AdminPage() {
   const portfolio = await getPortfolio();
   let workItems: WorkItem[] = portfolio.workItems;
 
-  if (isAdminDbReady) {
+  if (isAdminDbReady()) {
     const client = createServiceSupabaseClient();
     if (client) {
       const { data } = await client
@@ -46,7 +46,7 @@ export default async function AdminPage() {
     <AdminDashboard
       initial={portfolio}
       initialWorkItems={workItems}
-      dbReady={isAdminDbReady}
+      dbReady={isAdminDbReady()}
     />
   );
 }

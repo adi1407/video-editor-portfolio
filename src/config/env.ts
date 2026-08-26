@@ -1,14 +1,15 @@
-function readEnv(key: string) {
-  return process.env[key]?.trim() ?? "";
+function trimEnv(value: string | undefined) {
+  return value?.trim() ?? "";
 }
 
 function resolveSiteUrl() {
-  const explicit = readEnv("NEXT_PUBLIC_SITE_URL");
+  // Direct process.env.* access — Next.js only inlines these when written literally
+  const explicit = trimEnv(process.env.NEXT_PUBLIC_SITE_URL);
   if (explicit) {
     return explicit.replace(/\/$/, "");
   }
 
-  const vercel = readEnv("VERCEL_URL");
+  const vercel = trimEnv(process.env.VERCEL_URL);
   if (vercel) {
     return `https://${vercel.replace(/^https?:\/\//, "")}`;
   }
@@ -17,9 +18,9 @@ function resolveSiteUrl() {
 }
 
 export const env = {
-  supabaseUrl: readEnv("NEXT_PUBLIC_SUPABASE_URL"),
-  supabaseAnonKey: readEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
-  supabaseServiceRoleKey: readEnv("SUPABASE_SERVICE_ROLE_KEY"),
+  supabaseUrl: trimEnv(process.env.NEXT_PUBLIC_SUPABASE_URL),
+  supabaseAnonKey: trimEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+  supabaseServiceRoleKey: trimEnv(process.env.SUPABASE_SERVICE_ROLE_KEY),
   siteUrl: resolveSiteUrl(),
 };
 
