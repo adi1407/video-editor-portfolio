@@ -28,11 +28,11 @@ export function Footer() {
           className="relative block w-full outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           {reducedMotion ? (
-            <span className="block w-full py-4 text-center font-display text-[clamp(4.5rem,22vw,14rem)] font-medium leading-none tracking-tight text-foreground">
+            <span className="block w-full py-4 text-center font-display text-[clamp(4.5rem,22vw,14rem)] font-bold leading-none tracking-tight text-foreground">
               RAJU
             </span>
           ) : (
-            <div className="mx-auto h-[clamp(7rem,18vw,14rem)] w-full">
+            <div className="relative mx-auto h-[clamp(6.5rem,16vw,12rem)] w-full min-h-[6.5rem]">
               <TextPressure
                 text="RAJU"
                 flex
@@ -40,11 +40,11 @@ export function Footer() {
                 stroke={false}
                 width
                 weight
-                italic
-                scale
-                textColor="#F8FAFC"
+                italic={false}
+                scale={false}
+                textColor="#FFFFFF"
                 strokeColor="#A78BFA"
-                minFontSize={36}
+                minFontSize={48}
               />
             </div>
           )}
