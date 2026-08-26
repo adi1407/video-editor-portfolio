@@ -10,7 +10,7 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { Container } from "@/components/ui";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMediaQuery, useMounted } from "@/hooks";
+import { useMounted } from "@/hooks";
 import { WorkCard } from "./work-card";
 import { WorkVideoModal } from "./work-video-modal";
 import type { MorphItem } from "@/components/ui/MorphSlider";
@@ -91,8 +91,7 @@ function MobileImageStrip({
 
 export function WorkHero() {
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-  const strokeSize = !mounted || !isDesktop ? 42 : 88;
+  const strokeSize = 56;
 
   return (
     <section className="relative overflow-hidden border-b border-border py-16 sm:py-28">
@@ -120,11 +119,11 @@ export function WorkHero() {
             fontSize={strokeSize}
             fontWeight={800}
             letterSpacing={-2}
-            className="max-w-full"
+            className="max-w-full [&_svg]:h-auto [&_svg]:max-w-full [&_svg]:w-full"
           />
         </div>
-        {mounted && isDesktop ? (
-          <div className="relative h-[88px] w-full max-w-3xl sm:h-[110px]">
+        {mounted ? (
+          <div className="relative h-[72px] w-full max-w-3xl sm:h-[110px]">
             <WarpText
               text="Long format · Short format · Posters · Logos"
               color="#94a3b8"
@@ -133,7 +132,7 @@ export function WorkHero() {
               speed={0.35}
               pointerInfluence={0.55}
               pointerStrength={0.4}
-              fontSize="clamp(1.1rem, 2.4vw, 1.6rem)"
+              fontSize="clamp(1rem, 3.5vw, 1.6rem)"
               fontWeight={600}
               className="h-full w-full"
             />
@@ -151,7 +150,6 @@ export function WorkHero() {
 
 export function WorkGallery() {
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const { workCategories } = usePortfolio();
   const archiveItems = useMemo(
     () =>
@@ -191,8 +189,8 @@ export function WorkGallery() {
           className="mt-2"
         />
       </Container>
-      {mounted && isDesktop ? (
-        <div className="relative h-[560px] sm:h-[640px]">
+      {mounted ? (
+        <div className="relative h-[420px] sm:h-[560px] lg:h-[640px]">
           <DriftWall
             items={archiveItems}
             columns={5}
@@ -300,7 +298,6 @@ function LongFormSection({
   onPlay: (payload: { title: string; videoUrl: string }) => void;
 }) {
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const lead = category.items[0];
 
   if (!lead) {
@@ -319,7 +316,7 @@ function LongFormSection({
       id={category.slug}
       className="scroll-mt-24 border-b border-border content-visibility-auto"
     >
-      {mounted && isDesktop ? (
+      {mounted ? (
         <div className="bg-background">
           <ScrollExpand
             src={lead.image}
@@ -374,7 +371,6 @@ function ShortFormSection({
   onPlay: (payload: { title: string; videoUrl: string }) => void;
 }) {
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const morphItems: MorphItem[] = category.items.map((item) => ({
     image: item.image,
     caption: item.title,
@@ -389,8 +385,8 @@ function ShortFormSection({
     >
       <Container className="flex flex-col gap-8 sm:gap-10">
         <CategoryHeader title={category.title} blurb={category.blurb} />
-        {mounted && isDesktop && morphItems.length ? (
-          <div className="relative h-[420px] w-full overflow-hidden border border-border sm:h-[500px]">
+        {mounted && morphItems.length ? (
+          <div className="relative h-[320px] w-full overflow-hidden border border-border sm:h-[420px] md:h-[500px]">
             <MorphSlider
               items={morphItems}
               transition="melt"
@@ -407,7 +403,7 @@ function ShortFormSection({
         {first && second ? (
           <div className="mx-auto w-full max-w-md">
             <PixelTransition
-              gridSize={mounted && isDesktop ? 8 : 6}
+              gridSize={8}
               pixelColor="#A78BFA"
               animationStepDuration={0.3}
               aspectRatio="125%"
@@ -433,8 +429,8 @@ function ShortFormSection({
                 />
               }
             />
-            <p className="mt-2 text-center text-xs text-muted md:hidden">
-              Tap to swap frames
+            <p className="mt-2 text-center text-xs text-muted">
+              Tap or hover to swap frames
             </p>
           </div>
         ) : null}
@@ -446,7 +442,6 @@ function ShortFormSection({
 
 function PostersSection({ category }: { category: WorkCategoryView }) {
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const posterImages = category.items.map((item) => item.image);
   const first = category.items[0];
   const second = category.items[1] ?? category.items[0];
@@ -485,22 +480,22 @@ function PostersSection({ category }: { category: WorkCategoryView }) {
                   />
                 </div>
               }
-              pixelSize={mounted && isDesktop ? 48 : 40}
+              pixelSize={48}
               gap={0}
               duration={1000}
               pattern="diagonal"
-              trigger={mounted && isDesktop ? "hover" : "click"}
+              trigger="click"
               aspectRatio="75%"
               className="w-full"
             />
-            <p className="border-t border-border px-3 py-2 text-center text-xs text-muted md:hidden">
+            <p className="border-t border-border px-3 py-2 text-center text-xs text-muted">
               Tap to reveal the other poster
             </p>
           </div>
         ) : null}
       </Container>
-      {mounted && isDesktop && posterImages.length ? (
-        <div className="relative h-[520px] w-full overflow-hidden border-y border-border bg-background sm:h-[600px]">
+      {mounted && posterImages.length ? (
+        <div className="relative h-[380px] w-full overflow-hidden border-y border-border bg-background sm:h-[520px] md:h-[600px]">
           <FlyingPosters items={posterImages} />
         </div>
       ) : (
@@ -517,7 +512,6 @@ function PostersSection({ category }: { category: WorkCategoryView }) {
 
 function LogosSection({ category }: { category: WorkCategoryView }) {
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const menuItems = category.items.map((item) => ({
     image: item.image,
     link: `/work#${category.slug}`,
@@ -533,8 +527,8 @@ function LogosSection({ category }: { category: WorkCategoryView }) {
       <Container className="flex flex-col gap-8 py-12 sm:gap-10 sm:pb-10 sm:pt-20">
         <CategoryHeader title={category.title} blurb={category.blurb} />
       </Container>
-      {mounted && isDesktop && menuItems.length ? (
-        <div className="relative h-[520px] w-full overflow-hidden border-y border-border bg-background sm:h-[600px]">
+      {mounted && menuItems.length ? (
+        <div className="relative h-[380px] w-full overflow-hidden border-y border-border bg-background sm:h-[520px] md:h-[600px]">
           <InfiniteMenu items={menuItems} />
         </div>
       ) : (

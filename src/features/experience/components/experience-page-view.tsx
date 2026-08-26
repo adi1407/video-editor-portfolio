@@ -67,10 +67,10 @@ export function ExperiencePageView() {
             ease="power2.out"
             trigger="mount"
             fillMode="wipe"
-            fontSize={96}
+            fontSize={64}
             fontWeight={800}
             letterSpacing={-3}
-            className="max-w-full"
+            className="max-w-full [&_svg]:h-auto [&_svg]:max-w-full [&_svg]:w-full"
           />
           <div className="relative h-[72px] w-full max-w-2xl sm:h-[90px]">
             <WarpText
@@ -116,7 +116,7 @@ export function ExperiencePageView() {
           pointerRepel={36}
           repelRadius={110}
           idleDrift={0.65}
-          trigger="hover"
+          trigger="scroll"
           fontSize="clamp(3rem, 12vw, 7rem)"
           fontWeight={800}
           fontFamily="inherit"

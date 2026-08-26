@@ -1,6 +1,6 @@
 "use client";
 
-// Helvetica site-wide; variable-font axes (wdth/wght) degrade gracefully on static fonts.
+// Variable-font pressure (Roboto Flex) — wdth / wght / italic axes respond to cursor.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -21,6 +21,11 @@ export interface TextPressureProps {
   className?: string;
   minFontSize?: number;
 }
+
+const ROBOTO_FLEX =
+  "Roboto Flex, Helvetica, 'Helvetica Neue', Arial, sans-serif";
+const ROBOTO_FLEX_URL =
+  "https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap";
 
 const dist = (a: { x: number; y: number }, b: { x: number; y: number }) => {
   const dx = b.x - a.x;
@@ -50,8 +55,8 @@ const debounce = (func: (...args: unknown[]) => void, delay: number) => {
 
 const TextPressure = ({
   text = "Compressa",
-  fontFamily = 'Helvetica, "Helvetica Neue", Arial, sans-serif',
-  fontUrl = "",
+  fontFamily = ROBOTO_FLEX,
+  fontUrl = ROBOTO_FLEX_URL,
   width = true,
   weight = true,
   italic = true,
@@ -115,12 +120,12 @@ const TextPressure = ({
 
     if (containerW < 1) return;
 
-    let newFontSize = containerW / Math.max(chars.length / 2, 1);
+    // Fill most of the width so letters feel large and reactive
+    let newFontSize = containerW / Math.max(chars.length / 1.6, 1);
     newFontSize = Math.max(newFontSize, minFontSize);
 
-    // Fit within height without the fragile scaleY=0 collapse
     if (containerH > 1) {
-      newFontSize = Math.min(newFontSize, containerH * 0.92);
+      newFontSize = Math.min(newFontSize, containerH * 0.95);
     }
 
     setFontSize(newFontSize);
@@ -132,10 +137,8 @@ const TextPressure = ({
         if (!titleRef.current) return;
         const textRect = titleRef.current.getBoundingClientRect();
         if (textRect.height > 1) {
-          const yRatio = Math.min(1, containerH / textRect.height);
-          if (yRatio > 0.05) {
-            setScaleY(yRatio);
-          }
+          const yRatio = Math.min(1.15, containerH / textRect.height);
+          if (yRatio > 0.05) setScaleY(yRatio);
         }
       });
     }
@@ -162,12 +165,14 @@ const TextPressure = ({
   useEffect(() => {
     let rafId: number;
     const animate = () => {
-      mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 15;
-      mouseRef.current.y += (cursorRef.current.y - mouseRef.current.y) / 15;
+      // Snappier follow for a stronger hover feel
+      mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 8;
+      mouseRef.current.y += (cursorRef.current.y - mouseRef.current.y) / 8;
 
       if (titleRef.current) {
         const titleRect = titleRef.current.getBoundingClientRect();
-        const maxDist = Math.max(titleRect.width / 2, 1);
+        // Tighter falloff = stronger local pressure
+        const maxDist = Math.max(titleRect.width / 2.4, 80);
 
         spansRef.current.forEach((span) => {
           if (!span) return;
@@ -180,21 +185,25 @@ const TextPressure = ({
 
           const d = dist(mouseRef.current, charCenter);
 
-          const wdth = width ? Math.floor(getAttr(d, maxDist, 5, 200)) : 100;
-          const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
-          const italVal = italic ? getAttr(d, maxDist, 0, 1).toFixed(2) : "0";
+          const wdth = width ? Math.floor(getAttr(d, maxDist, 25, 151)) : 100;
+          const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 1000)) : 400;
+          const slnt = italic
+            ? (-getAttr(d, maxDist, 0, 10)).toFixed(1)
+            : "0";
           const alphaVal = alpha ? getAttr(d, maxDist, 0, 1).toFixed(2) : "1";
+          // Extra scale punch near cursor
+          const proximity = Math.max(0, 1 - d / maxDist);
+          const letterScale = 1 + proximity * 0.28;
 
-          const newFontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${italVal}`;
+          const newFontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'opsz' 144, 'SOFT' ${Math.floor(proximity * 100)}, 'slnt' ${slnt}`;
 
           if (span.style.fontVariationSettings !== newFontVariationSettings) {
             span.style.fontVariationSettings = newFontVariationSettings;
           }
-          // Static fonts still respond via font-weight
-          if (weight) {
-            span.style.fontWeight = String(wght);
-          }
-          if (alpha && span.style.opacity !== alphaVal) {
+          span.style.fontWeight = String(wght);
+          span.style.transform = `scale(${letterScale})`;
+          span.style.transformOrigin = "center bottom";
+          if (alpha) {
             span.style.opacity = alphaVal;
           }
         });
@@ -247,11 +256,12 @@ const TextPressure = ({
           transform: `scale(1, ${scaleY})`,
           transformOrigin: "center top",
           margin: 0,
-          fontWeight: 700,
+          fontWeight: 100,
           color: stroke ? undefined : textColor,
           width: "100%",
           height: "100%",
           alignItems: "center",
+          willChange: "contents",
         }}
       >
         {chars.map((char, i) => (
@@ -261,7 +271,8 @@ const TextPressure = ({
               spansRef.current[i] = el;
             }}
             data-char={char}
-            className="inline-block"
+            className="inline-block will-change-transform"
+            style={{ transition: "none" }}
           >
             {char}
           </span>

@@ -20,7 +20,7 @@ export function ParticleTextBand() {
         pointerRepel={40}
         repelRadius={120}
         idleDrift={0.7}
-        trigger="hover"
+        trigger="scroll"
         fontSize="clamp(3rem, 12vw, 8rem)"
         fontWeight={800}
         fontFamily="inherit"

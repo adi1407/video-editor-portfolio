@@ -138,14 +138,19 @@ const ChromaGrid = ({
   };
 
   const handleCardClick = (url?: string) => {
-    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+    if (!url) return;
+    if (url.startsWith("/") || url.startsWith("#")) {
+      window.location.assign(url);
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  const handleCardMove: React.MouseEventHandler<HTMLElement> = e => {
-    const c = e.currentTarget as HTMLElement;
+  const handleCardMove = (e: React.PointerEvent<HTMLElement>) => {
+    const c = e.currentTarget;
     const rect = c.getBoundingClientRect();
-    c.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-    c.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    c.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+    c.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
   };
 
   return (
@@ -156,31 +161,31 @@ const ChromaGrid = ({
       className={`relative w-full h-full grid grid-cols-2 gap-3 content-start items-stretch lg:grid-cols-4 ${className}`}
       style={
         {
-          '--r': `${radius}px`,
-          '--x': '50%',
-          '--y': '50%'
+          "--r": `${radius}px`,
+          "--x": "50%",
+          "--y": "50%",
         } as React.CSSProperties
       }
     >
       {data.map((c, i) => (
         <article
           key={i}
-          onMouseMove={handleCardMove}
+          onPointerMove={handleCardMove}
           onClick={() => handleCardClick(c.url)}
           className="group relative flex h-full min-w-0 w-full flex-col overflow-hidden rounded-[20px] border-2 border-transparent transition-colors duration-300 cursor-pointer"
           style={
             {
-              '--card-border': c.borderColor || 'transparent',
+              "--card-border": c.borderColor || "transparent",
               background: c.gradient,
-              '--spotlight-color': 'rgba(255,255,255,0.3)'
+              "--spotlight-color": "rgba(255,255,255,0.3)",
             } as React.CSSProperties
           }
         >
           <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100"
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100 group-active:opacity-100"
             style={{
               background:
-                'radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)'
+                "radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)",
             }}
           />
           <div className="relative z-10 aspect-[4/5] flex-none p-[10px] box-border">

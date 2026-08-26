@@ -8,13 +8,12 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container } from "@/components/ui";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMediaQuery, useMounted } from "@/hooks";
+import { useMounted } from "@/hooks";
 
 export function Hero() {
   const { profile } = usePortfolio();
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-  const strokeSize = !mounted || !isDesktop ? 40 : 96;
+  const strokeSize = 64;
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden border-b border-border">
@@ -31,7 +30,7 @@ export function Hero() {
             pulseLength={0.28}
             pulseBlend={1}
             pulseWidth={1}
-            cableCount={mounted && isDesktop ? 20 : 10}
+            cableCount={mounted ? 20 : 12}
             thickness={0.35}
             rimWidth={0.15}
             waviness={0.3}
@@ -44,7 +43,7 @@ export function Hero() {
             fadeFar={2}
             brightness={1.0}
             colorVariance
-            grain={Boolean(mounted && isDesktop)}
+            grain={mounted}
             grainIntensity={0.05}
             opacity={1.0}
             mouseInteraction={false}
@@ -81,7 +80,7 @@ export function Hero() {
             fontSize={strokeSize}
             fontWeight={800}
             letterSpacing={-2}
-            className="max-w-full"
+            className="max-w-full [&_svg]:h-auto [&_svg]:max-w-full [&_svg]:w-full"
           />
           <div className="-mt-1 sm:-mt-2">
             <FoldText

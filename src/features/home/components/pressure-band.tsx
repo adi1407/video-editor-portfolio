@@ -2,14 +2,13 @@
 
 import ParticleText from "@/components/ui/ParticleText";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMediaQuery, useMounted } from "@/hooks";
+import { useMounted } from "@/hooks";
 
 export function PressureBand() {
   const { profile } = usePortfolio();
   const mounted = useMounted();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  if (!mounted || !isDesktop) {
+  if (!mounted) {
     return (
       <section
         aria-label="Purpose"
@@ -25,7 +24,7 @@ export function PressureBand() {
   return (
     <section
       aria-label="Purpose"
-      className="relative h-[320px] w-full overflow-hidden border-y border-border bg-[#09090f] sm:h-[380px]"
+      className="relative h-[260px] w-full overflow-hidden border-y border-border bg-[#09090f] sm:h-[320px] md:h-[380px]"
     >
       <ParticleText
         text={profile.tagline}
@@ -39,8 +38,8 @@ export function PressureBand() {
         pointerRepel={40}
         repelRadius={120}
         idleDrift={0.7}
-        trigger="hover"
-        fontSize="clamp(1.75rem, 6vw, 4.5rem)"
+        trigger="scroll"
+        fontSize="clamp(1.5rem, 7vw, 4.5rem)"
         fontWeight={800}
         fontFamily="inherit"
         glow

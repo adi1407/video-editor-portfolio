@@ -32,7 +32,7 @@ export function Footer() {
               RAJU
             </span>
           ) : (
-            <div className="relative mx-auto h-[clamp(6.5rem,16vw,12rem)] w-full min-h-[6.5rem]">
+            <div className="relative mx-auto h-[clamp(8rem,22vw,18rem)] w-full min-h-[8rem]">
               <TextPressure
                 text="RAJU"
                 flex
@@ -40,11 +40,11 @@ export function Footer() {
                 stroke={false}
                 width
                 weight
-                italic={false}
+                italic
                 scale={false}
                 textColor="#FFFFFF"
                 strokeColor="#A78BFA"
-                minFontSize={48}
+                minFontSize={56}
               />
             </div>
           )}

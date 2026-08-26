@@ -14,7 +14,7 @@ export interface ParticleTextProps {
   pointerRepel?: number;
   repelRadius?: number;
   idleDrift?: number;
-  trigger?: "mount" | "hover" | "click";
+  trigger?: "mount" | "hover" | "click" | "scroll";
   fontSize?: number | string;
   fontWeight?: number | string;
   fontFamily?: string;
@@ -394,37 +394,59 @@ const ParticleText = ({
 
     const handlePointerEnter = (event: PointerEvent): void => {
       handlePointerMove(event);
-      if (trigger === 'hover') startGather(true);
+      if (trigger === "hover") startGather(true);
+    };
+
+    const handlePointerDown = (event: PointerEvent): void => {
+      handlePointerMove(event);
+      if (trigger === "hover" || trigger === "click") startGather(true);
     };
 
     const handleClick = (): void => {
-      if (trigger === 'click') startGather(true);
+      if (trigger === "click") startGather(true);
     };
 
-    const reduceMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const reduceMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     const handleReduceMotionChange = (event: MediaQueryListEvent): void => {
       reducedMotion = event.matches;
       void sampleText();
     };
 
-    reduceMotionQuery?.addEventListener('change', handleReduceMotionChange);
-    canvas.addEventListener('pointerenter', handlePointerEnter);
-    canvas.addEventListener('pointermove', handlePointerMove);
-    canvas.addEventListener('pointerleave', handlePointerLeave);
-    canvas.addEventListener('click', handleClick);
+    reduceMotionQuery?.addEventListener("change", handleReduceMotionChange);
+    canvas.addEventListener("pointerenter", handlePointerEnter);
+    canvas.addEventListener("pointerdown", handlePointerDown);
+    canvas.addEventListener("pointermove", handlePointerMove);
+    canvas.addEventListener("pointerleave", handlePointerLeave);
+    canvas.addEventListener("click", handleClick);
 
     const resizeObserver = new ResizeObserver(queueSample);
     resizeObserver.observe(container);
+
+    let intersectionObserver: IntersectionObserver | null = null;
+    if (trigger === "scroll" || trigger === "hover") {
+      intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting) {
+            startGather(true);
+          }
+        },
+        { threshold: 0.35 },
+      );
+      intersectionObserver.observe(container);
+    }
+
     void sampleText();
 
     return () => {
       buildId += 1;
       resizeObserver.disconnect();
-      reduceMotionQuery?.removeEventListener('change', handleReduceMotionChange);
-      canvas.removeEventListener('pointerenter', handlePointerEnter);
-      canvas.removeEventListener('pointermove', handlePointerMove);
-      canvas.removeEventListener('pointerleave', handlePointerLeave);
-      canvas.removeEventListener('click', handleClick);
+      intersectionObserver?.disconnect();
+      reduceMotionQuery?.removeEventListener("change", handleReduceMotionChange);
+      canvas.removeEventListener("pointerenter", handlePointerEnter);
+      canvas.removeEventListener("pointerdown", handlePointerDown);
+      canvas.removeEventListener("pointermove", handlePointerMove);
+      canvas.removeEventListener("pointerleave", handlePointerLeave);
+      canvas.removeEventListener("click", handleClick);
 
       if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
       if (resizeFrame !== null) window.cancelAnimationFrame(resizeFrame);
@@ -451,7 +473,7 @@ const ParticleText = ({
   return (
     <div
       ref={containerRef}
-      className={`relative block h-full min-h-[240px] w-full overflow-hidden touch-none ${className}`}
+      className={`relative block h-full min-h-[240px] w-full overflow-hidden touch-manipulation ${className}`}
       style={style}
       aria-label={text}
     >
