@@ -7,6 +7,7 @@ import {
   saveSiteSettingsAction,
   upsertWorkItemAction,
 } from "@/features/admin/actions";
+import { MediaField } from "@/features/admin/components/media-field";
 import { buttonClassName, Container, Input } from "@/components/ui";
 import { CATEGORY_ORDER } from "@/lib/portfolio/defaults";
 import type {
@@ -358,19 +359,21 @@ export function AdminDashboard({
                     value={draft.title}
                     onChange={(v) => setDraft((d) => ({ ...d, title: v }))}
                   />
-                  <Field
-                    label="Cover image URL"
+                  <MediaField
+                    label="Cover image"
+                    kind="cover"
                     value={draft.coverUrl}
                     onChange={(v) => setDraft((d) => ({ ...d, coverUrl: v }))}
+                    disabled={pending}
                   />
                   {isVideoCategory ? (
-                    <div className="sm:col-span-2">
-                      <Field
-                        label="Video link (YouTube / Vimeo / direct URL)"
-                        value={draft.videoUrl || ""}
-                        onChange={(v) => setDraft((d) => ({ ...d, videoUrl: v }))}
-                      />
-                    </div>
+                    <MediaField
+                      label="Video"
+                      kind="video"
+                      value={draft.videoUrl || ""}
+                      onChange={(v) => setDraft((d) => ({ ...d, videoUrl: v }))}
+                      disabled={pending}
+                    />
                   ) : null}
                   <Field
                     label="Tags (comma separated)"

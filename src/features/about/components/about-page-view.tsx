@@ -11,6 +11,7 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container } from "@/components/ui";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
+import { useHeavyEffects } from "@/hooks";
 
 const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
   ssr: false,
@@ -30,6 +31,7 @@ const Lanyard = dynamic(() => import("@/components/ui/Lanyard"), {
 export function AboutPageView() {
   const router = useRouter();
   const { profile, services, stats, toolkit } = usePortfolio();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const cards = services.map((service) => ({
     color: "#060010",
     label: service.label,
@@ -81,16 +83,29 @@ export function AboutPageView() {
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto h-[min(68svh,480px)] w-full max-w-md touch-none sm:h-[min(70svh,520px)] lg:max-w-none">
-            <Lanyard
-              className="h-full w-full"
-              position={[0, 0, 22]}
-              gravity={[0, -28, 0]}
-              fov={20}
-              frontImage="/lanyard/raju.jpeg"
-              backImage="/lanyard/raju.jpeg"
-              imageFit="cover"
-            />
+          <div className="relative mx-auto h-[min(68svh,480px)] w-full max-w-md sm:h-[min(70svh,520px)] lg:max-w-none">
+            {mounted && enableHeavyEffects ? (
+              <Lanyard
+                className="h-full w-full touch-none"
+                position={[0, 0, 22]}
+                gravity={[0, -28, 0]}
+                fov={20}
+                frontImage="/lanyard/raju.jpeg"
+                backImage="/lanyard/raju.jpeg"
+                imageFit="cover"
+              />
+            ) : (
+              <div className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden border border-border bg-surface">
+                <Image
+                  src="/lanyard/raju.jpeg"
+                  alt={profile.name}
+                  fill
+                  className="object-cover"
+                  sizes="400px"
+                  priority
+                />
+              </div>
+            )}
           </div>
         </Container>
       </section>

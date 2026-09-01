@@ -10,7 +10,7 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { Container } from "@/components/ui";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMounted } from "@/hooks";
+import { useHeavyEffects } from "@/hooks";
 import { WorkCard } from "./work-card";
 import { WorkVideoModal } from "./work-video-modal";
 import type { MorphItem } from "@/components/ui/MorphSlider";
@@ -90,7 +90,7 @@ function MobileImageStrip({
 }
 
 export function WorkHero() {
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const strokeSize = 56;
 
   return (
@@ -122,7 +122,7 @@ export function WorkHero() {
             className="max-w-full [&_svg]:h-auto [&_svg]:max-w-full [&_svg]:w-full"
           />
         </div>
-        {mounted ? (
+        {mounted && enableHeavyEffects ? (
           <div className="relative h-[72px] w-full max-w-3xl sm:h-[110px]">
             <WarpText
               text="Long format · Short format · Posters · Logos"
@@ -149,7 +149,7 @@ export function WorkHero() {
 }
 
 export function WorkGallery() {
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const { workCategories } = usePortfolio();
   const archiveItems = useMemo(
     () =>
@@ -189,7 +189,7 @@ export function WorkGallery() {
           className="mt-2"
         />
       </Container>
-      {mounted ? (
+      {mounted && enableHeavyEffects ? (
         <div className="relative h-[420px] sm:h-[560px] lg:h-[640px]">
           <DriftWall
             items={archiveItems}
@@ -297,7 +297,7 @@ function LongFormSection({
   category: WorkCategoryView;
   onPlay: (payload: { title: string; videoUrl: string }) => void;
 }) {
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const lead = category.items[0];
 
   if (!lead) {
@@ -316,7 +316,7 @@ function LongFormSection({
       id={category.slug}
       className="scroll-mt-24 border-b border-border content-visibility-auto"
     >
-      {mounted ? (
+      {mounted && enableHeavyEffects ? (
         <div className="bg-background">
           <ScrollExpand
             src={lead.image}
@@ -370,7 +370,7 @@ function ShortFormSection({
   category: WorkCategoryView;
   onPlay: (payload: { title: string; videoUrl: string }) => void;
 }) {
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const morphItems: MorphItem[] = category.items.map((item) => ({
     image: item.image,
     caption: item.title,
@@ -385,7 +385,7 @@ function ShortFormSection({
     >
       <Container className="flex flex-col gap-8 sm:gap-10">
         <CategoryHeader title={category.title} blurb={category.blurb} />
-        {mounted && morphItems.length ? (
+        {mounted && enableHeavyEffects && morphItems.length ? (
           <div className="relative h-[320px] w-full overflow-hidden border border-border sm:h-[420px] md:h-[500px]">
             <MorphSlider
               items={morphItems}
@@ -441,7 +441,7 @@ function ShortFormSection({
 }
 
 function PostersSection({ category }: { category: WorkCategoryView }) {
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const posterImages = category.items.map((item) => item.image);
   const first = category.items[0];
   const second = category.items[1] ?? category.items[0];
@@ -494,7 +494,7 @@ function PostersSection({ category }: { category: WorkCategoryView }) {
           </div>
         ) : null}
       </Container>
-      {mounted && posterImages.length ? (
+      {mounted && enableHeavyEffects && posterImages.length ? (
         <div className="relative h-[380px] w-full overflow-hidden border-y border-border bg-background sm:h-[520px] md:h-[600px]">
           <FlyingPosters items={posterImages} />
         </div>
@@ -511,7 +511,7 @@ function PostersSection({ category }: { category: WorkCategoryView }) {
 }
 
 function LogosSection({ category }: { category: WorkCategoryView }) {
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const menuItems = category.items.map((item) => ({
     image: item.image,
     link: `/work#${category.slug}`,
@@ -527,7 +527,7 @@ function LogosSection({ category }: { category: WorkCategoryView }) {
       <Container className="flex flex-col gap-8 py-12 sm:gap-10 sm:pb-10 sm:pt-20">
         <CategoryHeader title={category.title} blurb={category.blurb} />
       </Container>
-      {mounted && menuItems.length ? (
+      {mounted && enableHeavyEffects && menuItems.length ? (
         <div className="relative h-[380px] w-full overflow-hidden border-y border-border bg-background sm:h-[520px] md:h-[600px]">
           <InfiniteMenu items={menuItems} />
         </div>

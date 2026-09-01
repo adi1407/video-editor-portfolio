@@ -11,6 +11,7 @@ import StrokeText from "@/components/ui/StrokeText";
 import TextLoop from "@/components/ui/TextLoop";
 import { buttonClassName, Container } from "@/components/ui";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
+import { useHeavyEffects } from "@/hooks";
 
 const Ribbons = dynamic(() => import("@/components/ui/Ribbons"), {
   ssr: false,
@@ -26,6 +27,7 @@ const WarpText = dynamic(() => import("@/components/ui/WarpText"), {
 
 export function ExperiencePageView() {
   const { experience, profile, toolkit } = usePortfolio();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const toolLogos = [...toolkit.videoMotion, ...toolkit.design].map((title) => ({
     node: (
       <span className="whitespace-nowrap text-sm font-semibold tracking-wide text-foreground/90 sm:text-base">
@@ -34,19 +36,27 @@ export function ExperiencePageView() {
     ),
     title,
   }));
+
   return (
     <>
       <section className="relative overflow-hidden border-b border-border py-16 sm:py-24">
-        <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden>
-          <Ribbons
-            baseThickness={24}
-            colors={["#A855F7", "#5227FF"]}
-            speedMultiplier={0.4}
-            maxAge={450}
-            enableFade
-            enableShaderEffect
+        {mounted && enableHeavyEffects ? (
+          <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden>
+            <Ribbons
+              baseThickness={24}
+              colors={["#A855F7", "#5227FF"]}
+              speedMultiplier={0.4}
+              maxAge={450}
+              enableFade
+              enableShaderEffect
+            />
+          </div>
+        ) : (
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(168,85,247,0.2),transparent_70%)]"
+            aria-hidden
           />
-        </div>
+        )}
         <Container className="relative z-10 flex flex-col gap-5">
           <ShinyText
             text="Career path"
@@ -72,19 +82,25 @@ export function ExperiencePageView() {
             letterSpacing={-3}
             className="max-w-full [&_svg]:h-auto [&_svg]:max-w-full [&_svg]:w-full"
           />
-          <div className="relative h-[72px] w-full max-w-2xl sm:h-[90px]">
-            <WarpText
-              text="Professional craft · Freelance hustle · Every frame"
-              color="#94a3b8"
-              warpStrength={0.4}
-              warpScale={2}
-              speed={0.3}
-              pointerInfluence={0.5}
-              fontSize="clamp(1rem, 2.2vw, 1.35rem)"
-              fontWeight={600}
-              className="h-full w-full"
-            />
-          </div>
+          {mounted && enableHeavyEffects ? (
+            <div className="relative h-[72px] w-full max-w-2xl sm:h-[90px]">
+              <WarpText
+                text="Professional craft · Freelance hustle · Every frame"
+                color="#94a3b8"
+                warpStrength={0.4}
+                warpScale={2}
+                speed={0.3}
+                pointerInfluence={0.5}
+                fontSize="clamp(1rem, 2.2vw, 1.35rem)"
+                fontWeight={600}
+                className="h-full w-full"
+              />
+            </div>
+          ) : (
+            <p className="max-w-2xl text-base leading-7 text-muted sm:text-lg">
+              Professional craft · Freelance hustle · Every frame
+            </p>
+          )}
         </Container>
       </section>
 
@@ -102,26 +118,34 @@ export function ExperiencePageView() {
 
       <section
         aria-label="Purpose"
-        className="relative h-[280px] w-full overflow-hidden border-b border-border bg-[#09090f] sm:h-[320px]"
+        className="relative w-full overflow-hidden border-b border-border bg-[#09090f] py-14 sm:py-16"
       >
-        <ParticleText
-          text="PURPOSE"
-          particleSize={2}
-          density={5}
-          color="#ffffff"
-          highlightColor="#8b5cf6"
-          scatter={160}
-          gatherDuration={1500}
-          stagger={380}
-          pointerRepel={36}
-          repelRadius={110}
-          idleDrift={0.65}
-          trigger="scroll"
-          fontSize="clamp(3rem, 12vw, 7rem)"
-          fontWeight={800}
-          fontFamily="inherit"
-          glow
-        />
+        {mounted && enableHeavyEffects ? (
+          <div className="h-[280px] sm:h-[320px]">
+            <ParticleText
+              text="PURPOSE"
+              particleSize={2}
+              density={5}
+              color="#ffffff"
+              highlightColor="#8b5cf6"
+              scatter={160}
+              gatherDuration={1500}
+              stagger={380}
+              pointerRepel={36}
+              repelRadius={110}
+              idleDrift={0.65}
+              trigger="scroll"
+              fontSize="clamp(3rem, 12vw, 7rem)"
+              fontWeight={800}
+              fontFamily="inherit"
+              glow
+            />
+          </div>
+        ) : (
+          <p className="px-4 text-center font-display text-[clamp(2rem,10vw,4rem)] font-bold tracking-tight text-foreground">
+            PURPOSE
+          </p>
+        )}
       </section>
 
       <section className="border-b border-border py-16 sm:py-20">

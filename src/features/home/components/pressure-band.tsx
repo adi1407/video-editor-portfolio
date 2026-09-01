@@ -2,13 +2,13 @@
 
 import ParticleText from "@/components/ui/ParticleText";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMounted } from "@/hooks";
+import { useHeavyEffects } from "@/hooks";
 
 export function PressureBand() {
   const { profile } = usePortfolio();
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
 
-  if (!mounted) {
+  if (!mounted || !enableHeavyEffects) {
     return (
       <section
         aria-label="Purpose"

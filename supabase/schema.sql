@@ -170,3 +170,31 @@ select * from (values
   ('logos', 'Brand system mark', '/work/p-02.jpg', null, array['System','Mark'], 2, false, null)
 ) as v(category, title, cover_url, video_url, tags, sort_order, featured, featured_subtitle)
 where not exists (select 1 from public.work_items limit 1);
+
+-- Portfolio media uploads (admin → Supabase Storage, public read)
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'portfolio-media',
+  'portfolio-media',
+  true,
+  83886080,
+  array[
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime'
+  ]
+)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Public read portfolio media" on storage.objects;
+create policy "Public read portfolio media"
+  on storage.objects for select
+  to anon, authenticated
+  using (bucket_id = 'portfolio-media');
+

@@ -8,48 +8,52 @@ import ShinyText from "@/components/ui/ShinyText";
 import StrokeText from "@/components/ui/StrokeText";
 import { buttonClassName, Container } from "@/components/ui";
 import { usePortfolio } from "@/features/portfolio/portfolio-context";
-import { useMounted } from "@/hooks";
+import { useHeavyEffects } from "@/hooks";
 
 export function Hero() {
   const { profile } = usePortfolio();
-  const mounted = useMounted();
+  const { enableHeavyEffects, mounted } = useHeavyEffects();
   const strokeSize = 64;
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden border-b border-border">
       <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-        <div className="h-full w-full opacity-90">
-          <LightTunnel
-            cableColor="#A855F7"
-            pulseColor="#A855F7"
-            tunnelColor="#5227FF"
-            tunnelOpacity={0}
-            speed={0.1}
-            flowDirection="outward"
-            pulseSpeed={2}
-            pulseLength={0.28}
-            pulseBlend={1}
-            pulseWidth={1}
-            cableCount={mounted ? 20 : 12}
-            thickness={0.35}
-            rimWidth={0.15}
-            waviness={0.3}
-            sway={0.5}
-            size={1.0}
-            centerX={0.5}
-            centerY={0.0}
-            glow={1.0}
-            fadeNear={0.5}
-            fadeFar={2}
-            brightness={1.0}
-            colorVariance
-            grain={mounted}
-            grainIntensity={0.05}
-            opacity={1.0}
-            mouseInteraction={false}
-            mouseStrength={0.1}
-          />
-        </div>
+        {mounted && enableHeavyEffects ? (
+          <div className="h-full w-full opacity-90">
+            <LightTunnel
+              cableColor="#A855F7"
+              pulseColor="#A855F7"
+              tunnelColor="#5227FF"
+              tunnelOpacity={0}
+              speed={0.1}
+              flowDirection="outward"
+              pulseSpeed={2}
+              pulseLength={0.28}
+              pulseBlend={1}
+              pulseWidth={1}
+              cableCount={20}
+              thickness={0.35}
+              rimWidth={0.15}
+              waviness={0.3}
+              sway={0.5}
+              size={1.0}
+              centerX={0.5}
+              centerY={0.0}
+              glow={1.0}
+              fadeNear={0.5}
+              fadeFar={2}
+              brightness={1.0}
+              colorVariance
+              grain
+              grainIntensity={0.05}
+              opacity={1.0}
+              mouseInteraction={false}
+              mouseStrength={0.1}
+            />
+          </div>
+        ) : (
+          <div className="h-full w-full bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(168,85,247,0.35),transparent_70%),linear-gradient(180deg,#0a0f18_0%,#05070c_100%)]" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background/85" />
       </div>
 

@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
@@ -23,6 +24,24 @@ import type {
 
 type ActionResult = { ok: true } | { ok: false; error: string };
 
+type UploadResult = { ok: true; publicUrl: string } | { ok: false; error: string };
+
+const COVER_MIME = new Set(["image/jpeg", "image/png", "image/webp"]);
+const VIDEO_MIME = new Set(["video/mp4", "video/webm", "video/quicktime"]);
+const COVER_MAX_BYTES = 8 * 1024 * 1024;
+const VIDEO_MAX_BYTES = 80 * 1024 * 1024;
+const MEDIA_BUCKET = "portfolio-media";
+
+function extFromMime(mime: string) {
+  if (mime === "image/jpeg") return "jpg";
+  if (mime === "image/png") return "png";
+  if (mime === "image/webp") return "webp";
+  if (mime === "video/mp4") return "mp4";
+  if (mime === "video/webm") return "webm";
+  if (mime === "video/quicktime") return "mov";
+  return "bin";
+}
+
 function serviceClientOrError():
   | { ok: true; client: NonNullable<ReturnType<typeof createServiceSupabaseClient>> }
   | { ok: false; error: string } {
@@ -37,6 +56,76 @@ function serviceClientOrError():
     return { ok: false, error: "Could not create Supabase admin client." };
   }
   return { ok: true, client };
+}
+
+export async function uploadAdminMediaAction(
+  formData: FormData,
+): Promise<UploadResult> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
+
+  const db = serviceClientOrError();
+  if (!db.ok) return db;
+
+  const kind = String(formData.get("kind") ?? "");
+  const file = formData.get("file");
+
+  if (kind !== "cover" && kind !== "video") {
+    return { ok: false, error: "Invalid upload kind." };
+  }
+
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose a file to upload." };
+  }
+
+  const allowed = kind === "cover" ? COVER_MIME : VIDEO_MIME;
+  const maxBytes = kind === "cover" ? COVER_MAX_BYTES : VIDEO_MAX_BYTES;
+
+  if (!allowed.has(file.type)) {
+    return {
+      ok: false,
+      error:
+        kind === "cover"
+          ? "Cover must be JPEG, PNG, or WebP."
+          : "Video must be MP4, WebM, or MOV.",
+    };
+  }
+
+  if (file.size > maxBytes) {
+    return {
+      ok: false,
+      error:
+        kind === "cover"
+          ? "Cover image must be 8 MB or smaller."
+          : "Video must be 80 MB or smaller.",
+    };
+  }
+
+  const ext = extFromMime(file.type);
+  const folder = kind === "cover" ? "covers" : "videos";
+  const path = `${folder}/${randomUUID()}.${ext}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  const { error: uploadError } = await db.client.storage
+    .from(MEDIA_BUCKET)
+    .upload(path, buffer, {
+      contentType: file.type,
+      upsert: false,
+    });
+
+  if (uploadError) {
+    return { ok: false, error: uploadError.message };
+  }
+
+  const { data } = db.client.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+  if (!data.publicUrl) {
+    return { ok: false, error: "Upload succeeded but public URL was missing." };
+  }
+
+  return { ok: true, publicUrl: data.publicUrl };
 }
 
 export async function adminLoginAction(
